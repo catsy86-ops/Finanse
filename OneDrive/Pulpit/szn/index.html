@@ -614,6 +614,34 @@
 
   </div><!-- /#app -->
 
+  <script>
+    // Load Leaflet immediately if needed
+    function loadLeafletFromCDNNow() {
+      console.log('📥 Pobieranie Leaflet z CDN...');
+      
+      // Load CSS
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+      link.onload = () => console.log('✅ Leaflet CSS załadowany');
+      document.head.appendChild(link);
+
+      // Load JS
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+      script.onload = () => {
+        console.log('✅ Leaflet JS załadowany');
+        if (window.leafletMap && window.leafletMap.init) {
+          window.leafletMap.init();
+        }
+      };
+      script.onerror = () => {
+        console.error('❌ Błąd ładowania Leaflet');
+      };
+      document.head.appendChild(script);
+    }
+  </script>
+
   <script src="data.js"></script>
   <script src="community-data.js"></script>
   <script src="community-ui.js"></script>

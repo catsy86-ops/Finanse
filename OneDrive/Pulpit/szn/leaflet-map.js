@@ -267,35 +267,17 @@ function flyToPlaceLeaflet(placeId) {
 
 // Initialize Leaflet when Mapbox is not available
 function setupLeafletAlternative() {
+  console.log('🗺️ setupLeafletAlternative() - Sprawdzanie Leaflet...');
+  
   // Check if Leaflet is already loaded
   if (typeof L === 'undefined') {
-    console.log('📡 Ładowanie Leaflet z CDN...');
-    loadLeafletFromCDN();
+    console.warn('⚠️ Leaflet nie załadowany - czyż to możliwe?');
+    return false;
   } else {
+    console.log('✅ Leaflet dostępny - inicjalizacja mapy...');
     initLeafletMap();
+    return true;
   }
-}
-
-// Load Leaflet from CDN
-function loadLeafletFromCDN() {
-  // Add CSS
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
-  document.head.appendChild(link);
-
-  // Add JS
-  const script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
-  script.onload = () => {
-    console.log('✅ Leaflet załadowany z CDN');
-    initLeafletMap();
-  };
-  script.onerror = () => {
-    console.error('❌ Błąd ładowania Leaflet z CDN');
-    showToast('❌ Błąd ładowania biblioteki map');
-  };
-  document.head.appendChild(script);
 }
 
 // Export functions
@@ -306,15 +288,3 @@ window.leafletMap = {
   getMap: () => LEAFLET_MAP.map,
   isReady: () => LEAFLET_MAP.isInitialized
 };
-
-// Auto-initialize if Mapbox token is missing
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    const token = localStorage.getItem('mapboxToken');
-    if (!token || token === '') {
-      // No token - try Leaflet alternative
-      console.log('🗺️ Brak Mapbox tokenu - przygotowuję Leaflet...');
-      setTimeout(setupLeafletAlternative, 1500);
-    }
-  }, 1000);
-});

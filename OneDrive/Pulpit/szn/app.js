@@ -67,30 +67,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== MAP INIT =====
 function initMap() {
+  console.log('🗺️ initMap() - Starting map initialization');
+  
   // Check if token is available
-  if (!mapboxgl.accessToken || mapboxgl.accessToken === '') {
-    console.log('📍 Brak Mapbox tokenu - ładowanie Leaflet + OpenStreetMap...');
-    showToast('🗺️ Ładowanie darmowej mapy OpenStreetMap...');
+  const token = localStorage.getItem('mapboxToken');
+  
+  if (!token || token === '') {
+    console.log('📍 Brak Mapbox tokenu - ładowanie Leaflet + OpenStreetMap TERAZ...');
+    showToast('🗺️ Ładowanie mapy OpenStreetMap...');
     
-    // Load Leaflet map instead
-    setTimeout(() => {
+    // Load Leaflet immediately
+    if (typeof L === 'undefined') {
+      console.log('📡 Leaflet nie załadowany - pobieranie z CDN...');
+      loadLeafletFromCDNNow();
+    } else {
+      console.log('✅ Leaflet już dostępny - inicjalizacja...');
       window.leafletMap.init();
-      showToast('✅ Mapa OpenStreetMap załadowana! (100% darmowa)');
-    }, 500);
+    }
     return;
   }
 
-  state.map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/standard',
-    center: APP_DATA.center,
-    zoom: 15.5,
-    pitch: 60,
-    bearing: -20,
-    antialias: true
-  });
-
-  const map = state.map;
+  console.log('✅ Mapbox token dostępny - załadowanie Mapbox');
+  
+  // Try to load Mapbox
+  try {
+    state.map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/standard',
+      center: APP_DATA.center,
+      zoom: 15.5,
+      pitch: 60,
+      bearing: -20,
+      antialias: true
+    });
 
   map.on('load', () => {
     // Enable 3D buildings (Mapbox Standard style has them built-in)

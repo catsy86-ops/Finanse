@@ -122,7 +122,7 @@
       <section id="section-map" class="section active">
         <div class="map-container">
           <!-- Leaflet Map Container -->
-          <div id="map" class="map-main" style="height: 100%; width: 100%; background: #f0f0f0;"></div>
+          <div id="map" class="map-main"></div>
           
           <!-- Street View Panoramic (hidden by default, toggle to show) -->
           <div id="streetViewContainer" class="street-view-container hidden">
@@ -621,6 +621,22 @@
   </div><!-- /#app -->
 
   <!-- Leaflet is loaded via CDN in <head>, no extra script needed -->
+  <script>
+    // Clear any stale Service Worker + caches from the old Mapbox version
+    // so the new Leaflet map code and tiles always load fresh.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => reg.unregister());
+      });
+    }
+    if (window.caches && caches.keys) {
+      caches.keys().then(keys => {
+        keys.forEach(k => {
+          if (k !== 'szczecin-guide-v3-leaflet') caches.delete(k);
+        });
+      });
+    }
+  </script>
 
   <script src="data.js"></script>
   <script src="community-data.js"></script>

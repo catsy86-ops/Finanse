@@ -90,22 +90,40 @@ function initMap() {
     // Base tile layers
     const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
-      maxZoom: 19
+      maxZoom: 19,
+      crossOrigin: true
+    });
+
+    // Reliable CARTO basemap as primary (CORS-friendly, fast)
+    const cartoLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap © CARTO',
+      subdomains: 'abcd',
+      maxZoom: 20,
+      crossOrigin: true
     }).addTo(map);
 
     const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© Esri',
-      maxZoom: 18
+      maxZoom: 18,
+      crossOrigin: true
     });
 
-    const tonerLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}.png', {
-      attribution: '© Stadia Maps',
-      maxZoom: 18
+    // If CARTO fails to load tiles, fall back to OSM
+    let cartoErrors = 0;
+    cartoLayer.on('tileerror', () => {
+      cartoErrors++;
+      if (cartoErrors === 3 && !map.hasLayer(osmLayer)) {
+        console.warn('⚠️ CARTO tiles failing, switching to OpenStreetMap');
+        map.removeLayer(cartoLayer);
+        osmLayer.addTo(map);
+        state.currentBaseLayer = 'osm';
+        state.baseLayers.street = osmLayer;
+      }
     });
 
     // Store layers for switching
-    state.baseLayers = { osm: osmLayer, satellite: satelliteLayer, toner: tonerLayer };
-    state.currentBaseLayer = 'osm';
+    state.baseLayers = { street: cartoLayer, osm: osmLayer, satellite: satelliteLayer };
+    state.currentBaseLayer = 'street';
 
     // Add controls
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -165,6 +183,14 @@ function initMap() {
     // Store map in state
     state.map = map;
 
+    // CRITICAL: force Leaflet to recalculate container size so tiles load.
+    // The map is created right after the splash hides, so the container
+    // may not have its final dimensions yet — this fixes the "gray map".
+    setTimeout(() => map.invalidateSize(true), 200);
+    setTimeout(() => map.invalidateSize(true), 600);
+    setTimeout(() => map.invalidateSize(true), 1200);
+    window.addEventListener('resize', () => map.invalidateSize());
+
     showToast('✅ Mapa OpenStreetMap załadowana!');
     console.log('✨ Mapa Leaflet gotowa!');
 
@@ -214,6 +240,7 @@ function initMapControls() {
         btnSatellite.classList.add('active');
         document.getElementById('btnMapStreet').classList.remove('active');
         showToast('🛰️ Widok satelitarny');
+        setTimeout(() => map.invalidateSize(), 100);
       }
     });
   }
@@ -222,13 +249,14 @@ function initMapControls() {
   const btnMapStreet = document.getElementById('btnMapStreet');
   if (btnMapStreet) {
     btnMapStreet.addEventListener('click', () => {
-      if (state.currentBaseLayer !== 'osm') {
-        map.removeLayer(state.baseLayers[state.currentBaseLayer]);
-        state.baseLayers.osm.addTo(map);
-        state.currentBaseLayer = 'osm';
+      if (state.currentBaseLayer === 'satellite') {
+        map.removeLayer(state.baseLayers.satellite);
+        state.baseLayers.street.addTo(map);
+        state.currentBaseLayer = 'street';
         btnMapStreet.classList.add('active');
         document.getElementById('btnSatellite').classList.remove('active');
         showToast('🗺️ Widok uliczny');
+        setTimeout(() => map.invalidateSize(), 100);
       }
     });
   }

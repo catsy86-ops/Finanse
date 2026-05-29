@@ -1991,6 +1991,17 @@ body {
   background: transparent !important;
   border: none !important;
 }
+/* Ensure Leaflet map fills its container and tiles are visible */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  background: #aadaff; /* water-blue while tiles load, not gray */
+}
+.leaflet-tile-pane { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-marker-pane { z-index: 600; }
+.leaflet-popup-pane { z-index: 700; }
+.leaflet-control { z-index: 800; }
 .leaflet-popup-content-wrapper {
   background: var(--bg2, #1a1a2e) !important;
   border: 1px solid var(--border, rgba(255,255,255,0.08)) !important;

@@ -378,6 +378,75 @@ function initMapControls() {
 function initUI() {
   initMapControls();
 
+  // Map Tools Panel
+  const toolsToggle = document.getElementById('toolsToggle');
+  const toolsPanel = document.getElementById('mapToolsPanel');
+  const toolsClose = document.getElementById('toolsClose');
+
+  toolsToggle.addEventListener('click', () => {
+    toolsPanel.classList.toggle('hidden');
+    toolsToggle.style.background = toolsPanel.classList.contains('hidden') 
+      ? 'rgba(26,26,46,0.9)' 
+      : 'var(--accent)';
+  });
+
+  toolsClose.addEventListener('click', () => {
+    toolsPanel.classList.add('hidden');
+    toolsToggle.style.background = 'rgba(26,26,46,0.9)';
+  });
+
+  // Heatmap button
+  document.getElementById('btnHeatmap').addEventListener('click', () => {
+    window.mapEnhancements.toggleHeatmap();
+    document.getElementById('btnHeatmap').classList.toggle('active');
+  });
+
+  // Clustering button
+  document.getElementById('btnClustering').addEventListener('click', () => {
+    window.mapEnhancements.enableClustering();
+    document.getElementById('btnClustering').classList.toggle('active');
+  });
+
+  // Geofences button
+  document.getElementById('btnGeofences').addEventListener('click', () => {
+    window.mapEnhancements.geofences();
+    document.getElementById('btnGeofences').classList.toggle('active');
+  });
+
+  // Routing
+  document.getElementById('btnCalculateRoute').addEventListener('click', () => {
+    const startId = parseInt(document.getElementById('routeStart').value);
+    const endId = parseInt(document.getElementById('routeEnd').value);
+    if (startId && endId) {
+      window.mapEnhancements.routing(startId, endId);
+    } else {
+      showToast('⚠️ Wybierz początek i koniec trasy');
+    }
+  });
+
+  // Populate route selects
+  const selects = ['routeStart', 'routeEnd'];
+  selects.forEach(id => {
+    const select = document.getElementById(id);
+    APP_DATA.places.forEach(place => {
+      const option = document.createElement('option');
+      option.value = place.id;
+      option.textContent = place.name;
+      select.appendChild(option);
+    });
+  });
+
+  // Measurement button
+  document.getElementById('btnMeasure').addEventListener('click', () => {
+    window.mapEnhancements.measurement();
+    document.getElementById('btnMeasure').classList.toggle('active');
+  });
+
+  // Export button
+  document.getElementById('btnExportMap').addEventListener('click', () => {
+    window.mapEnhancements.export();
+  });
+
   // Menu button
   document.getElementById('menuBtn').addEventListener('click', () => {
     document.getElementById('sidebar').classList.add('open');

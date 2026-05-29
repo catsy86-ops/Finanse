@@ -137,8 +137,61 @@
             <button class="map-ctrl-btn" id="btnStreetView" title="Street View (Google)">📸</button>
           </div>
 
-          <!-- Panoramic Controls (Street View) -->
-          <div class="panoramic-controls hidden" id="panoramicControls">
+          <!-- Advanced Map Tools -->
+          <div class="map-tools-panel hidden" id="mapToolsPanel">
+            <div class="tools-header">
+              <h4>🛠️ Zaawansowane Narzędzia Mapy</h4>
+              <button class="tools-close" id="toolsClose">✕</button>
+            </div>
+            <div class="tools-content">
+              <div class="tool-group">
+                <h5>📊 Wizualizacja</h5>
+                <button class="tool-btn" id="btnHeatmap" title="Mapa ciepła aktywności">
+                  🔥 Mapa Ciepła
+                </button>
+                <button class="tool-btn" id="btnClustering" title="Grupowanie markerów">
+                  📍 Clustering
+                </button>
+                <button class="tool-btn" id="btnGeofences" title="Strefy zainteresowania">
+                  🎯 Strefy
+                </button>
+              </div>
+
+              <div class="tool-group">
+                <h5>🗺️ Nawigacja</h5>
+                <div class="routing-controls">
+                  <select id="routeStart" class="route-select">
+                    <option value="">Początek</option>
+                  </select>
+                  <select id="routeEnd" class="route-select">
+                    <option value="">Koniec</option>
+                  </select>
+                  <button class="tool-btn" id="btnCalculateRoute" title="Oblicz trasę">
+                    ➜ Trasa
+                  </button>
+                </div>
+              </div>
+
+              <div class="tool-group">
+                <h5>📏 Pomiary</h5>
+                <button class="tool-btn" id="btnMeasure" title="Mierz odległość">
+                  📏 Pomiar
+                </button>
+              </div>
+
+              <div class="tool-group">
+                <h5>💾 Export</h5>
+                <button class="tool-btn" id="btnExportMap" title="Pobierz mapę">
+                  📥 Pobierz PNG
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools Toggle Button -->
+          <button class="tools-toggle-btn" id="toolsToggle" title="Narzędzia mapy">
+            🛠️
+          </button>
             <div class="pano-control-group">
               <button id="svZoomIn" title="Zoom in" class="pano-btn">🔍+</button>
               <button id="svZoomOut" title="Zoom out" class="pano-btn">🔍−</button>
@@ -564,6 +617,7 @@
   <script src="data.js"></script>
   <script src="community-data.js"></script>
   <script src="community-ui.js"></script>
+  <script src="map-enhancements.js"></script>
   <script src="app.js"></script>
   <script src="live.js"></script>
   <script src="google-maps.js"></script>

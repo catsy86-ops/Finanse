@@ -10,24 +10,14 @@ interface Props {
   index?: number;
 }
 
-const accentMap = {
+const accentMap: Record<NonNullable<Props["accent"]>, string> = {
   primary: "from-[oklch(0.78_0.17_165)] to-[oklch(0.72_0.15_200)]",
   accent: "from-[oklch(0.72_0.15_200)] to-[oklch(0.7_0.18_280)]",
   warning: "from-[oklch(0.82_0.15_75)] to-[oklch(0.78_0.17_45)]",
   destructive: "from-[oklch(0.65_0.22_22)] to-[oklch(0.7_0.2_350)]",
 };
 
-// Extract numeric value from formatted PLN string for animation
-function parseNumeric(formatted: string): number {
-  return parseFloat(formatted.replace(/[^\d,.-]/g, "").replace(",", ".")) || 0;
-}
-
 function AnimatedValue({ value }: { value: string }) {
-  const numeric = parseNumeric(value);
-  const motionVal = useMotionValue(numeric);
-  const spring = useSpring(motionVal, { stiffness: 80, damping: 20 });
-  // We just re-render the formatted string directly — spring is for future use
-  // For simplicity, animate opacity+y on value change
   return (
     <motion.p
       key={value}

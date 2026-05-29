@@ -90,6 +90,9 @@ export type Database = {
           auto_save_percent: number
           created_at: string
           enabled_challenges: string[]
+          goal_current: number
+          goal_name: string
+          goal_target: number
           income_growth_pct: number
           interest_pct: number
           obligations_growth_pct: number
@@ -109,6 +112,9 @@ export type Database = {
           auto_save_percent?: number
           created_at?: string
           enabled_challenges?: string[]
+          goal_current?: number
+          goal_name?: string
+          goal_target?: number
           income_growth_pct?: number
           interest_pct?: number
           obligations_growth_pct?: number
@@ -128,6 +134,9 @@ export type Database = {
           auto_save_percent?: number
           created_at?: string
           enabled_challenges?: string[]
+          goal_current?: number
+          goal_name?: string
+          goal_target?: number
           income_growth_pct?: number
           interest_pct?: number
           obligations_growth_pct?: number

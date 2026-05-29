@@ -35,6 +35,7 @@ const iconFor = (cat: string) => {
     case "Zdrowie": return Heart;
     case "Edukacja": return GraduationCap;
     case "Rozrywka": return MoreHorizontal;
+    case "Inne": return MoreHorizontal;
     default: return ShoppingCart;
   }
 };
@@ -87,7 +88,15 @@ export function TransactionsPanel() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
+  const [monthFilter, setMonthFilter] = useState<string>(""); // "" = wszystkie
   const [page, setPage] = useState(1);
+
+  // Generuj listę dostępnych miesięcy z transakcji
+  const availableMonths = useMemo(() => {
+    const keys = new Set<string>();
+    for (const t of items) keys.add(t.occurred_on.slice(0, 7));
+    return [...keys].sort().reverse(); // najnowsze pierwsze
+  }, [items]);
 
   const isAuthed = !!user;
   const items = useMemo(() => {
@@ -110,6 +119,7 @@ export function TransactionsPanel() {
     return items.filter((t) => {
       if (filter === "income" && t.amount <= 0) return false;
       if (filter === "expense" && t.amount > 0) return false;
+      if (monthFilter && !t.occurred_on.startsWith(monthFilter)) return false;
       if (q) {
         const lq = q.toLowerCase();
         if (!t.title.toLowerCase().includes(lq) && !t.category.toLowerCase().includes(lq) && !(t.note ?? "").toLowerCase().includes(lq)) return false;
@@ -117,7 +127,7 @@ export function TransactionsPanel() {
       return true;
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, q, filter]);
+  }, [items, q, filter, monthFilter]);
 
   const stats = useMemo(() => {
     const month = new Date().toISOString().slice(0, 7);
@@ -199,6 +209,21 @@ export function TransactionsPanel() {
             className="h-9 pl-8"
           />
         </div>
+        {availableMonths.length > 1 && (
+          <select
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+            className="h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            aria-label="Filtruj po miesiącu"
+          >
+            <option value="">Wszystkie miesiące</option>
+            {availableMonths.map((m) => {
+              const [y, mo] = m.split("-").map(Number);
+              const label = new Date(y, (mo ?? 1) - 1, 1).toLocaleDateString("pl-PL", { month: "long", year: "numeric" });
+              return <option key={m} value={m}>{label}</option>;
+            })}
+          </select>
+        )}
         <div className="flex rounded-lg border border-border p-0.5">
           {([
             ["all", "Wszystkie"],

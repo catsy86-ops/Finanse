@@ -147,7 +147,7 @@ function SimulatorPage() {
 
   const roundupMonthly = roundupEnabled ? roundupStats.monthlyBase * multiplier : 0;
   const disposable = Math.max(0, income - obligations);
-  const autoBase = advancedMode ? disposable : income;
+  const autoBase = disposable; // zawsze liczymy z dochodu rozporządzalnego
   const autoMonthly = autoEnabled ? (autoBase * autoPct) / 100 : 0;
   const totalMonthly = roundupMonthly + autoMonthly;
   const totalYearly = totalMonthly * 12;

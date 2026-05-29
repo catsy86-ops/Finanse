@@ -1,70 +1,27 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Target, Pencil, Check, X } from "lucide-react";
+import { Target, Pencil, Check, X, Cloud, Loader2 } from "lucide-react";
 import { formatPLN } from "@/lib/finance-data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useUserSettings } from "@/hooks/useUserSettings";
 import { toast } from "sonner";
-import { useEffect } from "react";
-
-type GoalData = {
-  name: string;
-  target: number;
-  current: number;
-};
-
-const DEMO_GOAL: GoalData = { name: "Wakacje 2026 · Japonia", target: 25000, current: 14250 };
-const LS_KEY = "fiszu_savings_goal";
-
-function loadLocalGoal(): GoalData {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (raw) return JSON.parse(raw) as GoalData;
-  } catch {}
-  return DEMO_GOAL;
-}
 
 export function SavingsGoal() {
   const { user } = useAuth();
-  const [goal, setGoal] = useState<GoalData>(DEMO_GOAL);
+  const { settings, update, loading, saving } = useUserSettings(user?.id);
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState<GoalData>(DEMO_GOAL);
+  const [draft, setDraft] = useState({ name: "", target: 0, current: 0 });
 
-  // Load from Supabase user_settings metadata or localStorage
-  useEffect(() => {
-    if (!user) {
-      setGoal(loadLocalGoal());
-      return;
-    }
-    supabase
-      .from("user_settings")
-      .select("sim_income")
-      .eq("user_id", user.id)
-      .maybeSingle()
-      .then(() => {
-        // We store goal in localStorage keyed by user id for now
-        const key = `${LS_KEY}_${user.id}`;
-        try {
-          const raw = localStorage.getItem(key);
-          if (raw) setGoal(JSON.parse(raw) as GoalData);
-          else setGoal(DEMO_GOAL);
-        } catch {
-          setGoal(DEMO_GOAL);
-        }
-      });
-  }, [user]);
-
-  const saveGoal = (g: GoalData) => {
-    const key = user ? `${LS_KEY}_${user.id}` : LS_KEY;
-    localStorage.setItem(key, JSON.stringify(g));
-    setGoal(g);
-    toast.success("Cel oszczędnościowy zaktualizowany");
+  const goal = {
+    name: settings.goal_name,
+    target: settings.goal_target,
+    current: settings.goal_current,
   };
 
   const startEdit = () => {
-    setDraft({ ...goal });
+    setDraft({ name: goal.name, target: goal.target, current: goal.current });
     setEditing(true);
   };
 
@@ -72,8 +29,19 @@ export function SavingsGoal() {
     if (!draft.name.trim()) return toast.error("Podaj nazwę celu");
     if (draft.target <= 0) return toast.error("Cel musi być większy od 0");
     if (draft.current < 0) return toast.error("Aktualna kwota nie może być ujemna");
-    saveGoal(draft);
-    setEditing(false);
+    if (draft.current > draft.target) return toast.error("Odłożona kwota nie może przekraczać celu");
+
+    const result = update({
+      goal_name: draft.name.trim(),
+      goal_target: draft.target,
+      goal_current: draft.current,
+    });
+
+    if (result.ok) {
+      setEditing(false);
+      if (user) toast.success("Cel oszczędnościowy zaktualizowany", { description: "Zapisano w chmurze." });
+      else toast.success("Cel oszczędnościowy zaktualizowany");
+    }
   };
 
   const pct = Math.min(100, goal.target > 0 ? (goal.current / goal.target) * 100 : 0);
@@ -85,15 +53,28 @@ export function SavingsGoal() {
           <Target className="h-5 w-5 text-accent" />
           <h3 className="font-display text-lg font-semibold">Cel oszczędnościowy</h3>
         </div>
-        {!editing && (
-          <button
-            onClick={startEdit}
-            className="rounded-lg p-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-            aria-label="Edytuj cel"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {user && saving && (
+            <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+              <Loader2 className="h-3 w-3 animate-spin" /> Zapisuję…
+            </span>
+          )}
+          {user && !saving && !loading && !editing && (
+            <span className="inline-flex items-center gap-1 text-[11px] text-success">
+              <Cloud className="h-3 w-3" /> Zsynchronizowano
+            </span>
+          )}
+          {!editing && (
+            <button
+              onClick={startEdit}
+              disabled={loading}
+              className="rounded-lg p-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground disabled:opacity-40"
+              aria-label="Edytuj cel"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {editing ? (
@@ -104,7 +85,7 @@ export function SavingsGoal() {
               value={draft.name}
               onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
               placeholder="np. Wakacje · Japonia"
-              maxLength={80}
+              maxLength={120}
             />
           </div>
           <div className="grid grid-cols-2 gap-3">

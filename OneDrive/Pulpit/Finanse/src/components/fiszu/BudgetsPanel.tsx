@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, Plus, Target, Trash2, Wallet } from "lucide-react";
+import { AlertTriangle, Plus, Target, Trash2, Wallet, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -116,25 +116,39 @@ export function BudgetsPanel() {
   const spentByCategory = useMemo(() => {
     const now = new Date();
     const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const prevKey = (() => {
+      const d = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    })();
     const map = new Map<string, number>();
+    const prevMap = new Map<string, number>();
     const source = user
       ? transactions.map((t) => ({ category: t.category, amount: Number(t.amount), date: t.occurred_on }))
       : recentTransactions.map((t) => ({ category: t.category, amount: t.amount, date: t.date }));
     for (const t of source) {
       if (t.amount >= 0) continue;
-      if (!t.date.startsWith(key)) continue;
-      map.set(t.category, (map.get(t.category) ?? 0) + Math.abs(t.amount));
+      if (t.date.startsWith(key)) {
+        map.set(t.category, (map.get(t.category) ?? 0) + Math.abs(t.amount));
+      } else if (t.date.startsWith(prevKey)) {
+        prevMap.set(t.category, (prevMap.get(t.category) ?? 0) + Math.abs(t.amount));
+      }
     }
-    return map;
+    return { current: map, prev: prevMap };
   }, [transactions, user]);
 
   const rows = useMemo(() => {
     return budgets
       .map((b) => {
-        const spent = spentByCategory.get(b.category) ?? 0;
+        const spent = spentByCategory.current.get(b.category) ?? 0;
+        const prevSpent = spentByCategory.prev.get(b.category) ?? 0;
         const limit = Number(b.monthly_limit);
         const pct = limit > 0 ? Math.min(999, (spent / limit) * 100) : 0;
-        return { ...b, spent, pct, status: statusColor(pct, b.alert_threshold) };
+        const prevPct = limit > 0 ? Math.min(999, (prevSpent / limit) * 100) : 0;
+        const trend: "up" | "down" | "neutral" =
+          prevSpent === 0 ? "neutral" :
+          spent > prevSpent * 1.1 ? "up" :
+          spent < prevSpent * 0.9 ? "down" : "neutral";
+        return { ...b, spent, prevSpent, pct, prevPct, trend, status: statusColor(pct, b.alert_threshold) };
       })
       .sort((a, b) => b.pct - a.pct);
   }, [budgets, spentByCategory]);
@@ -251,6 +265,16 @@ export function BudgetsPanel() {
                       {remaining >= 0
                         ? `pozostało ${formatPLN(remaining)}`
                         : `przekroczone o ${formatPLN(-remaining)}`}
+                      {r.prevSpent > 0 && (
+                        <span className="ml-2 inline-flex items-center gap-0.5">
+                          {r.trend === "up" && <TrendingUp className="h-3 w-3 text-destructive" />}
+                          {r.trend === "down" && <TrendingDown className="h-3 w-3 text-success" />}
+                          {r.trend === "neutral" && <Minus className="h-3 w-3 text-muted-foreground/50" />}
+                          <span className={r.trend === "up" ? "text-destructive" : r.trend === "down" ? "text-success" : ""}>
+                            vs {formatPLN(r.prevSpent)} m-c temu
+                          </span>
+                        </span>
+                      )}
                     </p>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 transition group-hover:opacity-100">

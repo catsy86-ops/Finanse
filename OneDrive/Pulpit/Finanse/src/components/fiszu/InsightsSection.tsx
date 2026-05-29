@@ -12,7 +12,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import { PieChartIcon, TrendingUp } from "lucide-react";
+import { PieChartIcon, TrendingUp, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTransactions, type Transaction } from "@/hooks/useTransactions";
 import { formatPLN, recentTransactions } from "@/lib/finance-data";
@@ -45,8 +45,7 @@ export function InsightsSection() {
     ? transactions
     : (recentTransactions as unknown as AnyTx[]);
 
-  const { topCategories, monthly, totalExpenses } = useMemo(() => {
-    const getDate = (t: AnyTx) => t.occurred_on ?? t.date ?? "";
+  const { topCategories, monthly, totalExpenses } = useMemo(() => {    const getDate = (t: AnyTx) => t.occurred_on ?? t.date ?? "";
 
     // Top 5 categories by expenses (current month)
     const now = new Date();
@@ -90,6 +89,42 @@ export function InsightsSection() {
 
     return { topCategories: sorted, monthly, totalExpenses: totalExp };
   }, [source]);
+
+  // Wykrywanie anomalii: kategorie gdzie bieżący miesiąc jest ≥1.8× wyższy niż średnia z poprzednich 3 miesięcy
+  const anomalies = useMemo(() => {
+    if (!user || transactions.length === 0) return [];
+    const now = new Date();
+    const currentKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const prevKeys: string[] = [];
+    for (let i = 1; i <= 3; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      prevKeys.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+    }
+
+    // Agregacja per kategoria per miesiąc
+    const catMonth = new Map<string, Map<string, number>>();
+    for (const t of transactions) {
+      if (Number(t.amount) >= 0) continue;
+      const key = t.occurred_on.slice(0, 7);
+      if (key !== currentKey && !prevKeys.includes(key)) continue;
+      const cat = t.category;
+      if (!catMonth.has(cat)) catMonth.set(cat, new Map());
+      const m = catMonth.get(cat)!;
+      m.set(key, (m.get(key) ?? 0) + Math.abs(Number(t.amount)));
+    }
+
+    const result: { category: string; current: number; avg: number; ratio: number }[] = [];
+    for (const [cat, months] of catMonth.entries()) {
+      const current = months.get(currentKey) ?? 0;
+      if (current === 0) continue;
+      const prevVals = prevKeys.map((k) => months.get(k) ?? 0).filter((v) => v > 0);
+      if (prevVals.length === 0) continue;
+      const avg = prevVals.reduce((s, v) => s + v, 0) / prevVals.length;
+      const ratio = avg > 0 ? current / avg : 0;
+      if (ratio >= 1.8) result.push({ category: cat, current, avg, ratio });
+    }
+    return result.sort((a, b) => b.ratio - a.ratio).slice(0, 3);
+  }, [user, transactions]);
 
   return (
     <motion.section
@@ -213,6 +248,30 @@ export function InsightsSection() {
             </AreaChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Anomalie wydatków */}
+        {anomalies.length > 0 && (
+          <div className="mt-4 rounded-lg border border-[oklch(0.78_0.18_60)]/40 bg-[oklch(0.78_0.18_60)]/10 p-3">
+            <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-[oklch(0.85_0.18_60)]">
+              <AlertTriangle className="h-4 w-4" />
+              Wykryto anomalie wydatków
+            </div>
+            <ul className="space-y-1.5">
+              {anomalies.map((a) => (
+                <li key={a.category} className="flex items-center justify-between text-xs">
+                  <span className="text-foreground/80">
+                    <span className="font-medium">{a.category}</span>
+                    {" — "}
+                    {Math.round(a.ratio * 10) / 10}× wyżej niż średnia
+                  </span>
+                  <span className="tabular-nums text-muted-foreground">
+                    {formatPLN(a.current)} vs śr. {formatPLN(a.avg)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </motion.section>
   );

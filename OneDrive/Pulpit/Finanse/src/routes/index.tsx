@@ -13,6 +13,7 @@ import { InsightsSection } from "@/components/fiszu/InsightsSection";
 import { BudgetsPanel } from "@/components/fiszu/BudgetsPanel";
 import { AddTransactionDialog } from "@/components/fiszu/AddTransactionDialog";
 import { SavingsGoal } from "@/components/fiszu/SavingsGoal";
+import { FinancialHealthScore } from "@/components/fiszu/FinancialHealthScore";
 import { formatPLN, recentTransactions } from "@/lib/finance-data";
 import { useAuth } from "@/hooks/useAuth";
 import { useTransactions } from "@/hooks/useTransactions";
@@ -121,7 +122,10 @@ function Dashboard() {
         {/* Savings hub & goal */}
         <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="lg:col-span-2"><SaveMoneyHub /></div>
-          <SavingsGoal />
+          <div className="flex flex-col gap-4">
+            <SavingsGoal />
+            <FinancialHealthScore />
+          </div>
         </section>
 
         <section className="mt-6"><SavingsOpportunities /></section>

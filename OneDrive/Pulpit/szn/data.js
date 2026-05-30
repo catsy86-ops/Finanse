@@ -375,45 +375,138 @@ const APP_DATA = {
   // ===== INFO O DZIELNICY =====
   info: [
     {
+      id: 'overview',
       icon: '🏘️',
+      color: '#6c63ff',
       title: 'Charakterystyka dzielnicy',
       text: 'Obszar ulic Łuczniczej i Tarczowej to spokojna dzielnica mieszkaniowa w Szczecinie, charakteryzująca się zabudową wielorodzinną z lat 70. i 80. XX wieku. Dzielnica jest dobrze skomunikowana z centrum miasta i oferuje pełną infrastrukturę dla mieszkańców.',
+      facts: [
+        'Jedna z najspokojniejszych dzielnic Szczecina',
+        'Zabudowa wielorodzinna z wielkiej płyty',
+        'Pełna infrastruktura: szkoły, sklepy, przychodnie',
+        'Doskonałe połączenia tramwajowe i autobusowe'
+      ],
       stats: [
-        { num: '~8 000', label: 'Mieszkańców' },
-        { num: '2,4 km²', label: 'Powierzchnia' },
-        { num: '1970s', label: 'Zabudowa' }
+        { num: '~8 000', label: 'Mieszkańców', icon: '👥' },
+        { num: '2,4 km²', label: 'Powierzchnia', icon: '📐' },
+        { num: '1970s', label: 'Zabudowa', icon: '🏗️' }
       ]
     },
     {
+      id: 'nature',
       icon: '🌿',
+      color: '#43e97b',
       title: 'Zieleń i rekreacja',
       text: 'Dzielnica wyróżnia się dużą ilością terenów zielonych — skwery, parki osiedlowe i alejki spacerowe tworzą przyjazną przestrzeń dla mieszkańców. Siłownia plenerowa i boiska sportowe zachęcają do aktywności fizycznej na świeżym powietrzu.',
+      facts: [
+        'Ponad 30% powierzchni to tereny zielone',
+        'Bezpłatna siłownia plenerowa czynna całą dobę',
+        'Plac zabaw z nowoczesnym wyposażeniem',
+        'Planowane nowe ścieżki rowerowe w 2026 r.'
+      ],
       stats: [
-        { num: '3', label: 'Parki/skwery' },
-        { num: '2', label: 'Boiska' },
-        { num: '1', label: 'Siłownia' }
+        { num: '3', label: 'Parki/skwery', icon: '🌳' },
+        { num: '2', label: 'Boiska', icon: '⚽' },
+        { num: '1', label: 'Siłownia', icon: '💪' }
       ]
     },
     {
+      id: 'infra',
       icon: '🏗️',
+      color: '#ffd93d',
       title: 'Infrastruktura',
       text: 'Dzielnica posiada pełną infrastrukturę miejską: szkoły, przychodnie, apteki, sklepy i usługi. Trwają inwestycje w modernizację chodników i oświetlenia ulicznego. Planowana jest rozbudowa ścieżek rowerowych łączących dzielnicę z centrum.',
+      facts: [
+        'Szkoła podstawowa z salą gimnastyczną',
+        'Przychodnia POZ z rejestracją online',
+        'Apteka z dyżurami weekendowymi',
+        'Modernizacja oświetlenia LED w 2025 r.'
+      ],
       stats: [
-        { num: '1', label: 'Szkoła' },
-        { num: '1', label: 'Przychodnia' },
-        { num: '12+', label: 'Usług' }
+        { num: '1', label: 'Szkoła', icon: '🏫' },
+        { num: '1', label: 'Przychodnia', icon: '🏥' },
+        { num: '12+', label: 'Usług', icon: '🔧' }
       ]
     },
     {
+      id: 'history',
       icon: '📅',
+      color: '#a29bfe',
       title: 'Historia',
       text: 'Ulice Łucznicza i Tarczowa swoją nazwę zawdzięczają tradycji łucznictwa — sport ten był popularny w tym rejonie Szczecina. Dzielnica rozwijała się dynamicznie w latach 70. XX wieku jako część planu rozbudowy Szczecina po wojnie. Dziś jest spokojną, zieloną enklawą w tkance miejskiej.',
+      facts: [
+        'Nazwa pochodzi od tradycji łucznictwa',
+        'Budowa osiedla: lata 1968–1978',
+        'Pierwsi mieszkańcy wprowadzili się w 1971 r.',
+        'W 2020 r. rewitalizacja skweru przy Tarczowej'
+      ],
       stats: [
-        { num: '50+', label: 'Lat historii' },
-        { num: '1970', label: 'Rok budowy' },
-        { num: '🏹', label: 'Symbol' }
+        { num: '50+', label: 'Lat historii', icon: '📜' },
+        { num: '1970', label: 'Rok budowy', icon: '🏗️' },
+        { num: '🏹', label: 'Symbol', icon: '🏹' }
+      ]
+    },
+    {
+      id: 'transport',
+      icon: '🚌',
+      color: '#ff6b6b',
+      title: 'Komunikacja',
+      text: 'Dzielnica jest doskonale skomunikowana z centrum Szczecina. Liczne linie tramwajowe i autobusowe zapewniają szybki dojazd do każdej części miasta. Stacje Bike_S umożliwiają wygodne poruszanie się rowerem.',
+      facts: [
+        '3 linie tramwajowe w pobliżu',
+        '4 linie autobusowe dzienne + 2 nocne',
+        '2 stacje Bike_S w dzielnicy',
+        'Dojazd do centrum: ok. 15 minut'
+      ],
+      stats: [
+        { num: '7', label: 'Linii MPK', icon: '🚃' },
+        { num: '15 min', label: 'Do centrum', icon: '⏱️' },
+        { num: '2', label: 'Stacje Bike_S', icon: '🚲' }
+      ]
+    },
+    {
+      id: 'community',
+      icon: '👥',
+      color: '#fd79a8',
+      title: 'Społeczność',
+      text: 'Aktywna społeczność lokalna organizuje regularne spotkania, festyny i inicjatywy sąsiedzkie. Rada Osiedla reprezentuje interesy mieszkańców i współpracuje z władzami miasta przy planowaniu inwestycji.',
+      facts: [
+        'Coroczny Festyn Osiedlowy "Łucznicza Bawi"',
+        'Aktywna Rada Osiedla Łucznicza-Tarczowa',
+        'Grupy sąsiedzkie na portalach społecznościowych',
+        'Wolontariat i inicjatywy ekologiczne'
+      ],
+      stats: [
+        { num: '4 250', label: 'Mieszkańców', icon: '👥' },
+        { num: '38 lat', label: 'Średni wiek', icon: '👤' },
+        { num: '6+', label: 'Wydarzeń/rok', icon: '🎉' }
       ]
     }
+  ],
+
+  // ===== HISTORIA — TIMELINE =====
+  timeline: [
+    { year: '1945', icon: '🏚️', title: 'Odbudowa Szczecina', desc: 'Po II wojnie światowej Szczecin wraca do Polski. Rozpoczyna się odbudowa zniszczonego miasta.' },
+    { year: '1968', icon: '📐', title: 'Projekt osiedla', desc: 'Architekci miejscy opracowują projekt nowego osiedla mieszkaniowego przy ul. Łuczniczej i Tarczowej.' },
+    { year: '1971', icon: '🏠', title: 'Pierwsi mieszkańcy', desc: 'Pierwsze bloki gotowe. Rodziny wprowadzają się do nowych mieszkań. Dzielnica zaczyna tętnić życiem.' },
+    { year: '1975', icon: '🏫', title: 'Szkoła Podstawowa nr 47', desc: 'Otwarto Szkołę Podstawową nr 47 przy ul. Tarczowej. Dzieci z dzielnicy mają szkołę w pobliżu domu.' },
+    { year: '1978', icon: '🏗️', title: 'Koniec budowy', desc: 'Ostatnie bloki osiedla zostają oddane do użytku. Dzielnica osiąga docelową zabudowę.' },
+    { year: '1990', icon: '🛒', title: 'Nowe sklepy i usługi', desc: 'Po transformacji ustrojowej w dzielnicy otwierają się prywatne sklepy, apteki i punkty usługowe.' },
+    { year: '2010', icon: '💪', title: 'Siłownia plenerowa', desc: 'Miasto instaluje bezpłatną siłownię plenerową przy parku. Mieszkańcy ćwiczą na świeżym powietrzu.' },
+    { year: '2018', icon: '🎠', title: 'Nowy plac zabaw', desc: 'Nowoczesny plac zabaw "Łucznik" z ścianką wspinaczkową i bezpieczną nawierzchnią.' },
+    { year: '2020', icon: '🌳', title: 'Rewitalizacja skweru', desc: 'Rewitalizacja Skweru przy Tarczowej — nowe ławki, oświetlenie LED i nasadzenia drzew.' },
+    { year: '2025', icon: '🚲', title: 'Ścieżki rowerowe', desc: 'Modernizacja infrastruktury rowerowej. Nowe stacje Bike_S i oznakowane trasy rowerowe.' },
+    { year: '2026', icon: '🏹', title: 'Dziś', desc: 'Łucznicza i Tarczowa to tętniąca życiem, zielona dzielnica z aktywną społecznością i pełną infrastrukturą.' }
+  ],
+
+  // ===== CIEKAWOSTKI =====
+  funFacts: [
+    { emoji: '🏹', text: 'Nazwa "Łucznicza" pochodzi od łucznictwa — sportu popularnego w tym rejonie Szczecina w XIX wieku.' },
+    { emoji: '🌳', text: 'Ponad 30% powierzchni dzielnicy to tereny zielone — jeden z najwyższych wskaźników w Szczecinie.' },
+    { emoji: '🏗️', text: 'Bloki przy Łuczniczej zbudowano metodą wielkiej płyty — każdy blok powstawał w zaledwie kilka miesięcy.' },
+    { emoji: '🚃', text: 'Tramwaj nr 3 kursuje przez dzielnicę od ponad 50 lat — to jedna z najstarszych linii w Szczecinie.' },
+    { emoji: '🍽️', text: 'Bar Mleczny "Strzała" działa nieprzerwanie od lat 80. — to jeden z ostatnich prawdziwych barów mlecznych w mieście.' },
+    { emoji: '👶', text: 'Średni wiek mieszkańców to 38 lat — dzielnica jest popularna wśród młodych rodzin z dziećmi.' }
   ],
 
   // ===== TRANSPORT =====

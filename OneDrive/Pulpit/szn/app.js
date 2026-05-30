@@ -1084,27 +1084,186 @@ function showRouteOnMap(id) {
   }, 200);
 }
 
-// ===== RENDER INFO =====
+// ===== RENDER INFO (ENHANCED) =====
 function renderInfo() {
-  const container = document.getElementById('infoCards');
-  if (!container) return;
-  container.innerHTML = APP_DATA.info.map(item => `
-    <div class="info-card">
-      <div class="info-card-header">
-        <span class="info-card-icon">${item.icon}</span>
-        <h3 class="info-card-title">${item.title}</h3>
+  const section = document.getElementById('section-info');
+  if (!section) return;
+  const content = section.querySelector('.section-content');
+  if (!content) return;
+
+  content.innerHTML = `
+
+    <!-- Hero banner -->
+    <div class="info-hero">
+      <div class="info-hero-bg"></div>
+      <div class="info-hero-content">
+        <div class="info-hero-badge">🏹 Szczecin</div>
+        <h1 class="info-hero-title">Łucznicza & Tarczowa</h1>
+        <p class="info-hero-sub">Dzielnica mieszkaniowa · Szczecin Zachód</p>
+        <div class="info-hero-stats">
+          <div class="ihs-item"><span class="ihs-num" data-target="8000">0</span><span class="ihs-label">Mieszkańców</span></div>
+          <div class="ihs-item"><span class="ihs-num" data-target="50">0</span><span class="ihs-label">Lat historii</span></div>
+          <div class="ihs-item"><span class="ihs-num" data-target="12">0</span><span class="ihs-label">Miejsc POI</span></div>
+          <div class="ihs-item"><span class="ihs-num" data-target="6">0</span><span class="ihs-label">Tras</span></div>
+        </div>
       </div>
-      <p class="info-card-text">${item.text}</p>
-      <div class="info-stats">
-        ${item.stats.map(s => `
-          <div class="info-stat">
-            <div class="info-stat-num">${s.num}</div>
-            <div class="info-stat-label">${s.label}</div>
+    </div>
+
+    <!-- Quick nav pills -->
+    <div class="info-nav-pills">
+      <button class="inp-btn active" onclick="scrollToInfoSection('info-cards-section')">📋 Informacje</button>
+      <button class="inp-btn" onclick="scrollToInfoSection('info-timeline-section')">📅 Historia</button>
+      <button class="inp-btn" onclick="scrollToInfoSection('info-facts-section')">💡 Ciekawostki</button>
+      <button class="inp-btn" onclick="scrollToInfoSection('info-contact-section')">📞 Kontakt</button>
+    </div>
+
+    <!-- Info cards -->
+    <div id="info-cards-section">
+      <div class="info-section-title">📋 O dzielnicy</div>
+      <div class="info-cards" id="infoCards">
+        ${APP_DATA.info.map(item => renderInfoCard(item)).join('')}
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div id="info-timeline-section">
+      <div class="info-section-title">📅 Historia dzielnicy</div>
+      <div class="info-timeline">
+        ${APP_DATA.timeline.map((t, i) => `
+          <div class="tl-item ${t.year === '2026' ? 'tl-current' : ''}">
+            <div class="tl-year">${t.year}</div>
+            <div class="tl-dot">${t.icon}</div>
+            <div class="tl-content">
+              <div class="tl-title">${t.title}</div>
+              <div class="tl-desc">${t.desc}</div>
+            </div>
           </div>
         `).join('')}
       </div>
     </div>
+
+    <!-- Fun facts -->
+    <div id="info-facts-section">
+      <div class="info-section-title">💡 Czy wiesz, że...</div>
+      <div class="info-facts-grid">
+        ${APP_DATA.funFacts.map((f, i) => `
+          <div class="fact-card" style="animation-delay:${i * 0.08}s">
+            <span class="fact-emoji">${f.emoji}</span>
+            <p class="fact-text">${f.text}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Contact / Council -->
+    <div id="info-contact-section">
+      <div class="info-section-title">📞 Kontakt z dzielnicą</div>
+      <div class="info-contact-grid">
+        <div class="contact-card">
+          <div class="cc-icon">🏛️</div>
+          <div class="cc-body">
+            <div class="cc-title">Rada Osiedla Łucznicza-Tarczowa</div>
+            <div class="cc-detail">📧 rada.lucznicza@szczecin.pl</div>
+            <div class="cc-detail">📞 +48 91 424 50 00</div>
+            <div class="cc-detail">🕐 Dyżury: wt. i czw. 17:00–19:00</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon">🏙️</div>
+          <div class="cc-body">
+            <div class="cc-title">Urząd Miasta Szczecin</div>
+            <div class="cc-detail">🌐 szczecin.eu</div>
+            <div class="cc-detail">📞 +48 91 424 50 00</div>
+            <div class="cc-detail">📍 pl. Armii Krajowej 1</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon">🚨</div>
+          <div class="cc-body">
+            <div class="cc-title">Numery alarmowe</div>
+            <div class="cc-detail">🚒 Straż pożarna: <strong>998</strong></div>
+            <div class="cc-detail">🚑 Pogotowie: <strong>999</strong></div>
+            <div class="cc-detail">👮 Policja: <strong>997</strong> · Ogólny: <strong>112</strong></div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon">🌐</div>
+          <div class="cc-body">
+            <div class="cc-title">Przydatne linki</div>
+            <a class="cc-link" href="https://www.szczecin.eu" target="_blank">🏙️ szczecin.eu</a>
+            <a class="cc-link" href="https://www.zditm.szczecin.pl" target="_blank">🚌 ZDiTM Szczecin</a>
+            <a class="cc-link" href="https://www.bike-s.pl" target="_blank">🚲 Bike_S Szczecin</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  `;
+
+  // Animate counters
+  animateInfoCounters();
+}
+
+function renderInfoCard(item) {
+  const factsHtml = (item.facts || []).map(f => `
+    <li class="ic2-fact"><span class="ic2-check">✓</span>${f}</li>
   `).join('');
+
+  const statsHtml = item.stats.map(s => `
+    <div class="ic2-stat">
+      <span class="ic2-stat-icon">${s.icon || ''}</span>
+      <span class="ic2-stat-num">${s.num}</span>
+      <span class="ic2-stat-label">${s.label}</span>
+    </div>
+  `).join('');
+
+  return `
+    <div class="info-card-v2" id="icard-${item.id}">
+      <div class="ic2-header" style="background:linear-gradient(135deg,${item.color}33,${item.color}11);border-left:4px solid ${item.color}">
+        <span class="ic2-icon">${item.icon}</span>
+        <h3 class="ic2-title">${item.title}</h3>
+        <button class="ic2-toggle" onclick="toggleInfoCard('${item.id}')" id="ictoggle-${item.id}">›</button>
+      </div>
+      <div class="ic2-body" id="icbody-${item.id}" style="display:none">
+        <p class="ic2-text">${item.text}</p>
+        ${factsHtml ? `<ul class="ic2-facts">${factsHtml}</ul>` : ''}
+        <div class="ic2-stats">${statsHtml}</div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleInfoCard(id) {
+  const body = document.getElementById(`icbody-${id}`);
+  const btn = document.getElementById(`ictoggle-${id}`);
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (btn) btn.textContent = isOpen ? '›' : '⌄';
+}
+
+function scrollToInfoSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Update active pill
+  document.querySelectorAll('.inp-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Animate number counters in the hero
+function animateInfoCounters() {
+  const els = document.querySelectorAll('.ihs-num[data-target]');
+  els.forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const duration = 1200;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.round(current).toLocaleString('pl');
+      if (current >= target) clearInterval(timer);
+    }, 16);
+  });
 }
 
 // ===== RENDER TRANSPORT =====

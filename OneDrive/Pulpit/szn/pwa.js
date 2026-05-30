@@ -86,16 +86,7 @@ if ('serviceWorker' in navigator) {
 }
 
 function showUpdateBanner() {
-  if (document.getElementById('pwaUpdateBanner')) return;
-  const banner = document.createElement('div');
-  banner.id = 'pwaUpdateBanner';
-  banner.className = 'pwa-update-banner';
-  banner.innerHTML = `
-    <span>🔄 Dostępna nowa wersja aplikacji</span>
-    <button onclick="window.location.reload()">Odśwież</button>
-    <button onclick="this.parentElement.remove()">✕</button>
-  `;
-  document.body.appendChild(banner);
+  // Update banner disabled — silent update
 }
 
 // ===== ONLINE/OFFLINE STATUS =====

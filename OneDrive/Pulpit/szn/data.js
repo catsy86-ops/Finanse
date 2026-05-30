@@ -1,6 +1,6 @@
 // ===== DANE APLIKACJI =====
-// Centrum obszaru: ul. Łucznicza / Tarczowa, Szczecin
-// Współrzędne: ~53.4025, 14.5520
+// Dzielnica: Niebuszewo, Szczecin
+// Centrum: ~53.4530, 14.5520
 
 const APP_DATA = {
 

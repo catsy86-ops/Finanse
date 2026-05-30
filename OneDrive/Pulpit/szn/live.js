@@ -6,8 +6,8 @@
  * ============================================= */
 'use strict';
 
-// Szczecin — ul. Łucznicza
-const LAT = 53.4025;
+// Szczecin — Niebuszewo (centrum dzielnicy)
+const LAT = 53.4530;
 const LON = 14.5520;
 
 // ===== WMO WEATHER CODES =====

@@ -31,17 +31,22 @@ function toggleActivityHeatmap() {
   }
 
   const activityPoints = [
-    { lat: 53.4018, lng: 14.5535, weight: 0.9 },
-    { lat: 53.4020, lng: 14.5537, weight: 0.85 },
-    { lat: 53.4016, lng: 14.5533, weight: 0.8 },
-    { lat: 53.4030, lng: 14.5510, weight: 0.95 },
-    { lat: 53.4032, lng: 14.5512, weight: 0.9 },
-    { lat: 53.4035, lng: 14.5528, weight: 0.88 },
-    { lat: 53.4033, lng: 14.5530, weight: 0.85 },
-    { lat: 53.4010, lng: 14.5540, weight: 0.75 },
-    { lat: 53.4012, lng: 14.5542, weight: 0.7 },
-    { lat: 53.4040, lng: 14.5515, weight: 0.7 },
-    { lat: 53.4038, lng: 14.5517, weight: 0.65 }
+    // Park Kadziaka — spacery i jogging
+    { lat: 53.4510, lng: 14.5437, weight: 0.9 },
+    { lat: 53.4508, lng: 14.5440, weight: 0.85 },
+    { lat: 53.4505, lng: 14.5435, weight: 0.8 },
+    // Boisko sportowe
+    { lat: 53.4520, lng: 14.5510, weight: 0.95 },
+    { lat: 53.4522, lng: 14.5512, weight: 0.9 },
+    // Przyjaciół Żołnierza — centrum handlowe
+    { lat: 53.4548, lng: 14.5519, weight: 0.88 },
+    { lat: 53.4546, lng: 14.5521, weight: 0.85 },
+    // Szkoły
+    { lat: 53.4501, lng: 14.5552, weight: 0.75 },
+    { lat: 53.4503, lng: 14.5554, weight: 0.7 },
+    // Bandurskiego — sklepy
+    { lat: 53.4537, lng: 14.5636, weight: 0.7 },
+    { lat: 53.4535, lng: 14.5634, weight: 0.65 }
   ];
 
   const heatGroup = L.layerGroup();
@@ -227,9 +232,9 @@ function addGeofences() {
   MAP_ENHANCEMENTS.geofenceLayers = [];
 
   const zones = [
-    { name: 'Strefa Sportowa', center: [53.4030, 14.5510], radius: 200, color: '#ff6b6b' },
-    { name: 'Strefa Gastronomiczna', center: [53.4035, 14.5528], radius: 150, color: '#ffd93d' },
-    { name: 'Strefa Rodzinna', center: [53.4018, 14.5535], radius: 250, color: '#4ecdc4' }
+    { name: 'Strefa Sportowa', center: [53.4520, 14.5510], radius: 200, color: '#ff6b6b' },
+    { name: 'Strefa Handlowa', center: [53.4548, 14.5519], radius: 200, color: '#ffd93d' },
+    { name: 'Strefa Zielona (Parki)', center: [53.4510, 14.5437], radius: 250, color: '#4ecdc4' }
   ];
 
   zones.forEach(zone => {

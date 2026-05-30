@@ -1,6 +1,6 @@
 // Service Worker — Szczecin Guide PWA v5
 // Network-first for code, cache-first for tiles, offline fallback
-const CACHE_NAME = 'szczecin-guide-v5';
+const CACHE_NAME = 'niebuszewo-guide-v1';
 const TILE_CACHE = 'map-tiles-v1';
 
 const APP_SHELL = [
@@ -10,7 +10,9 @@ const APP_SHELL = [
   '/map-enhancements.js', '/map-improvements.js',
   '/navigation.js', '/search.js', '/pwa.js',
   '/community-data.js', '/community-ui.js',
-  '/manifest.json'
+  '/routes-meetup.js', '/user-profile.js',
+  '/place-images.js', '/pogon-mascot.js',
+  '/google-maps.js', '/manifest.json'
 ];
 
 // ===== INSTALL =====

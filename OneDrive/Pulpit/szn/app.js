@@ -591,7 +591,6 @@ function requestUserLocation(callback) {
 
 // ===== NAVIGATION =====
 function navigateTo(section) {
-  window.navigateTo = navigateTo;
   state.currentSection = section;
 
   document.querySelectorAll('.section').forEach(s => {
@@ -768,6 +767,8 @@ function flyToPlace(id) {
 function updateStatTotal() {
   const el = document.getElementById('statTotal');
   if (el) el.textContent = APP_DATA.places.length;
+  const elR = document.getElementById('statRoutes');
+  if (elR) elR.textContent = APP_DATA.routes.length;
 }
 
 // ===== RENDER ROUTES (ENHANCED) =====
@@ -1591,7 +1592,4 @@ function showToast(msg) {
 }
 
 // ===== RENDER COMMUNITY (handled by community-ui.js auto-init) =====
-function renderCommunity() {
-  // community-ui.js initializes itself via DOMContentLoaded
-  // Nothing needed here
-}
+// community-ui.js defines and exports window.renderCommunity — do not redefine here

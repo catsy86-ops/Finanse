@@ -243,27 +243,28 @@ function renderResults(q, results) {
 
   resEl.innerHTML = Object.entries(grouped).map(([type, items]) => `
     <div class="gs-section-title">${typeLabels[type] || type}</div>
-    ${items.map((item, i) => `
-      <div class="gs-item" tabindex="0" onclick="handleSearchResult(${JSON.stringify(i)}, '${type}', '${q}')">
+    ${items.map((item, i) => {
+      // Store the global index in the flat results array for correct action lookup
+      const globalIdx = results.indexOf(item);
+      return `
+      <div class="gs-item" tabindex="0" onclick="handleSearchResult(${globalIdx}, '${q}')">
         <span class="gs-item-icon">${item.icon}</span>
         <div class="gs-item-body">
           <div class="gs-item-title">${highlightMatch(item.title, q)}</div>
           <div class="gs-item-sub">${item.sub}</div>
         </div>
         <span class="gs-item-badge" style="background:${item.badgeColor}22;color:${item.badgeColor}">${item.badge}</span>
-      </div>
-    `).join('')}
+      </div>`;
+    }).join('')}
   `).join('');
 
   // Store actions for click handling
   window._searchResults = results;
 }
 
-window.handleSearchResult = function(idx, type, q) {
+window.handleSearchResult = function(globalIdx, q) {
   const results = window._searchResults || [];
-  // Find by type and index within type
-  const typeItems = results.filter(r => r.type === type);
-  const item = typeItems[idx] || results[idx];
+  const item = results[globalIdx];
   if (item?.action) {
     addToHistory(q);
     item.action();

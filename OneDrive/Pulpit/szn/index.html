@@ -12,14 +12,16 @@
 
   <!-- Mapbox removed — using Leaflet + OpenStreetMap instead -->
 
-  <!-- Google Maps API (Street View) — optional, loaded async. Fails gracefully if key invalid. -->
+  <!-- Google Maps Street View — DISABLED until a valid API key is provided.
+       The previous key was invalid (InvalidKeyMapError) and caused console errors
+       + a broken Street View init. The Leaflet map is the primary map and works fully.
+       To re-enable: add a valid key with "Maps JavaScript API" + "Street View" enabled,
+       uncomment the script below, and set window.GOOGLE_MAPS_ENABLED = true.
   <script>
-    // Called by Google Maps if the API key is invalid/unauthorized
     window.gm_authFailure = function () {
       window.GOOGLE_MAPS_FAILED = true;
-      console.warn('⚠️ Google Maps key invalid — Street View disabled, Leaflet map still works.');
       var btn = document.getElementById('btnStreetView');
-      if (btn) { btn.style.display = 'none'; }
+      if (btn) btn.style.display = 'none';
     };
     window.initGoogleMapsCallback = function () {
       if (typeof initGoogleMaps === 'function') {
@@ -28,7 +30,12 @@
     };
   </script>
   <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3aLJJFzlRXfWz9K9wQ8XzLt5rVqpQxE8&libraries=places,geocoding&loading=async&callback=initGoogleMapsCallback"></script>
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_VALID_KEY&libraries=places,geocoding&loading=async&callback=initGoogleMapsCallback"></script>
+  -->
+  <script>
+    // Google Maps not loaded — mark as unavailable so the app degrades gracefully.
+    window.GOOGLE_MAPS_FAILED = true;
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />

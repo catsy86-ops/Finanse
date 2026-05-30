@@ -424,11 +424,22 @@ async function generateTransportDepartures() {
     if (!response.ok) throw new Error('API fetch failed');
     
     const data = await response.json();
-    const departures = (data.departures || []).map(d => ({
-      ...d,
-      color: LINE_COLORS[d.line] || '#95a5a6',
-      time: d.time ? new Date(d.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) : '--:--',
-    }));
+    const departures = (data.departures || []).map(d => {
+      // Build a clock time (HH:MM) from minsLeft for display
+      let clock = '--:--';
+      if (typeof d.minsLeft === 'number') {
+        const t = new Date(Date.now() + d.minsLeft * 60000);
+        clock = `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
+      } else if (d.time) {
+        clock = new Date(d.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+      }
+      return {
+        ...d,
+        minsLeft: typeof d.minsLeft === 'number' ? d.minsLeft : 0,
+        color: LINE_COLORS[d.line] || '#95a5a6',
+        time: clock,
+      };
+    });
 
     // If we got real data, mark it
     if (data.source === 'zditm-real') {

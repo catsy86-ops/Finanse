@@ -64,6 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== DEEP LINK (#miejsce-X opens that place) =====
 function handleDeepLink() {
+  // Hide Street View button if Google Maps is unavailable
+  if (window.GOOGLE_MAPS_FAILED) {
+    const sv = document.getElementById('btnStreetView');
+    if (sv) sv.style.display = 'none';
+  }
+
   const hash = window.location.hash;
   const match = hash.match(/#miejsce-(\d+)/);
   if (match) {

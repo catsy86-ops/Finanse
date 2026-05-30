@@ -593,6 +593,22 @@ function updateTicker() {
   items.push(`🚌 <strong>Transport:</strong> Tramwaje 3, 7, 12 · Autobusy 51, 64, 78, 103`);
   items.push(`⏰ <strong>Aktualny czas:</strong> ${timeStr} · Strefa: Europa/Warszawa`);
 
+  // IMGW — Odra water level
+  if (live.imgw && live.imgw.hydro) {
+    items.push(`🌊 <strong>Odra Szczecin:</strong> Stan wody ${live.imgw.hydro.waterLevel} cm · Temp. wody ${live.imgw.hydro.waterTemp != null ? live.imgw.hydro.waterTemp + '°C' : '--'}`);
+  }
+
+  // GIOŚ — official Polish AQI
+  if (live.gios && live.gios.category && live.gios.source === 'gios') {
+    items.push(`🏭 <strong>GIOŚ Jakość powietrza:</strong> ${live.gios.category} (indeks ${live.gios.indexValue != null ? live.gios.indexValue : '--'})`);
+  }
+
+  // Moon phase
+  try {
+    const moon = getMoonPhase();
+    items.push(`${moon.emoji} <strong>Księżyc:</strong> ${moon.name} · Oświetlenie ${moon.illumination}%`);
+  } catch (e) { /* ignore */ }
+
   // Duplicate for seamless loop
   const allItems = [...items, ...items];
   const track = document.getElementById('tickerTrack');
@@ -919,26 +935,5 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 500);
 });
 
-// Update ticker with new data sources
-const _origUpdateTicker = updateTicker;
-function updateTicker() {
-  _origUpdateTicker();
-  // Add IMGW and moon to ticker if available
-  const track = document.getElementById('tickerTrack');
-  if (!track) return;
-  const extra = [];
-  if (live.imgw?.synop) {
-    extra.push(`🌊 <strong>Odra Szczecin:</strong> Stan wody ${live.imgw.hydro?.waterLevel ?? '--'} cm · Temp. wody ${live.imgw.hydro?.waterTemp ?? '--'}°C`);
-  }
-  if (live.gios?.category) {
-    extra.push(`🏭 <strong>GIOŚ Jakość powietrza:</strong> ${live.gios.category} (indeks ${live.gios.indexValue ?? '--'})`);
-  }
-  const moon = getMoonPhase();
-  extra.push(`${moon.emoji} <strong>Księżyc:</strong> ${moon.name} · Oświetlenie ${moon.illumination}%`);
-
-  if (extra.length) {
-    const current = track.innerHTML;
-    const newItems = extra.map(i => `<span class="ticker-item">${i}</span>`).join('');
-    track.innerHTML = current + newItems;
-  }
-}
+// NOTE: ticker extension is handled inside the original updateTicker() below.
+// Do NOT redefine updateTicker here — it causes infinite recursion via hoisting.

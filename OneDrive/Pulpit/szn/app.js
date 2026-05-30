@@ -769,51 +769,297 @@ function updateStatTotal() {
   if (el) el.textContent = APP_DATA.places.length;
 }
 
-// ===== RENDER ROUTES =====
+// ===== RENDER ROUTES (ENHANCED) =====
+const ROUTE_FAVS_KEY = 'lucznicza_route_favs';
+const routeState = { filter: 'all', activeTimer: null, timerRouteId: null, timerStart: null };
+
+function getRouteFavs() {
+  try { return JSON.parse(localStorage.getItem(ROUTE_FAVS_KEY) || '[]'); } catch { return []; }
+}
+function toggleRouteFav(id) {
+  let favs = getRouteFavs();
+  favs = favs.includes(id) ? favs.filter(f => f !== id) : [...favs, id];
+  localStorage.setItem(ROUTE_FAVS_KEY, JSON.stringify(favs));
+  return favs.includes(id);
+}
+
 function renderRoutes() {
+  const container = document.getElementById('section-routes');
+  if (!container) return;
+
+  // Build the full section HTML
+  container.querySelector('.section-content').innerHTML = `
+    <div class="section-hero">
+      <h2>🚶 Trasy spacerowe</h2>
+      <p>Odkryj dzielnicę pieszo, rowerem lub biegiem</p>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="routes-stats-bar">
+      <div class="rst-item"><span class="rst-num">${APP_DATA.routes.length}</span><span class="rst-label">Tras</span></div>
+      <div class="rst-item"><span class="rst-num">${APP_DATA.routes.filter(r=>r.type==='walk').length}</span><span class="rst-label">Spacerowych</span></div>
+      <div class="rst-item"><span class="rst-num">${APP_DATA.routes.filter(r=>r.type==='bike').length}</span><span class="rst-label">Rowerowych</span></div>
+      <div class="rst-item"><span class="rst-num">${APP_DATA.routes.filter(r=>r.type==='run').length}</span><span class="rst-label">Biegowych</span></div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="routes-filter-tabs" id="routesFilterTabs">
+      <button class="rft-btn active" data-type="all">🗺️ Wszystkie</button>
+      <button class="rft-btn" data-type="walk">🚶 Spacer</button>
+      <button class="rft-btn" data-type="bike">🚴 Rower</button>
+      <button class="rft-btn" data-type="run">🏃 Bieg</button>
+      <button class="rft-btn" data-type="fav">❤️ Ulubione</button>
+    </div>
+
+    <!-- Routes list -->
+    <div class="routes-list" id="routesList"></div>
+  `;
+
+  // Wire filter tabs
+  container.querySelectorAll('.rft-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.rft-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      routeState.filter = btn.dataset.type;
+      renderRouteCards();
+    });
+  });
+
+  renderRouteCards();
+}
+
+function renderRouteCards() {
   const list = document.getElementById('routesList');
   if (!list) return;
-  list.innerHTML = APP_DATA.routes.map(r => `
-    <div class="route-card">
-      <div class="route-header" onclick="toggleRoute(${r.id})">
-        <div class="route-icon" style="background:${r.color}22">
-          <span>${r.emoji}</span>
-        </div>
-        <div class="route-meta">
-          <div class="route-name">${r.name}</div>
-          <div class="route-info">
-            <span class="route-tag">📏 ${r.distance}</span>
-            <span class="route-tag">⏱️ ${r.time}</span>
-            <span class="route-tag">🟢 ${r.difficulty}</span>
-          </div>
-        </div>
-        <span style="color:var(--text2);font-size:20px" id="route-arrow-${r.id}">›</span>
+  const favs = getRouteFavs();
+  let routes = APP_DATA.routes;
+
+  if (routeState.filter === 'fav') {
+    routes = routes.filter(r => favs.includes(r.id));
+  } else if (routeState.filter !== 'all') {
+    routes = routes.filter(r => r.type === routeState.filter);
+  }
+
+  if (!routes.length) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text2)">
+      <div style="font-size:48px;margin-bottom:12px">🗺️</div>
+      <p>Brak tras w tej kategorii</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = routes.map(r => renderRouteCard(r, favs.includes(r.id))).join('');
+}
+
+function renderRouteCard(r, isFav) {
+  const typeIcon = { walk: '🚶', bike: '🚴', run: '🏃' }[r.type] || '🗺️';
+  const typeLabel = { walk: 'Spacer', bike: 'Rower', run: 'Bieg' }[r.type] || '';
+  const diffColor = r.difficultyLevel === 1 ? '#43e97b' : r.difficultyLevel === 2 ? '#ffd93d' : '#ff6584';
+  const diffDots = '●'.repeat(r.difficultyLevel) + '○'.repeat(3 - r.difficultyLevel);
+  const tagsHtml = (r.tags || []).map(t => `<span class="route-tag-pill">#${t}</span>`).join('');
+  const highlightsHtml = (r.highlights || []).map(h => `<li>${h}</li>`).join('');
+  const stopsHtml = (r.stops || []).map((s, i) => `
+    <div class="route-stop-item ${i === 0 ? 'start' : i === (r.stops.length-1) ? 'end' : ''}">
+      <div class="rsi-dot" style="background:${r.color}">
+        ${i === 0 ? '▶' : i === (r.stops.length-1) ? '🏁' : (i+1)}
       </div>
-      <div class="route-body" id="route-body-${r.id}" style="display:none">
-        <div class="route-desc">${r.desc}</div>
-        <div class="route-stops">
-          ${r.stops.map(s => `
-            <div class="route-stop">
-              <span class="stop-dot" style="background:${r.color}"></span>
-              ${s}
-            </div>
-          `).join('')}
+      <div class="rsi-info">
+        <span class="rsi-emoji">${s.emoji}</span>
+        <div>
+          <div class="rsi-name">${s.name}</div>
+          <div class="rsi-addr">${s.addr}</div>
         </div>
-        <button class="route-btn" onclick="showRouteOnMap(${r.id})" style="background:${r.color}">
-          🗺️ Pokaż trasę na mapie
-        </button>
       </div>
     </div>
   `).join('');
+
+  return `
+    <div class="route-card-v2" id="rcard-${r.id}">
+      <!-- Hero -->
+      <div class="rc2-hero" style="background:linear-gradient(135deg,${r.color}dd,${r.color}88)">
+        <div class="rc2-hero-left">
+          <span class="rc2-emoji">${r.emoji}</span>
+          <div>
+            <div class="rc2-type-badge">${typeIcon} ${typeLabel}</div>
+            <div class="rc2-name">${r.name}</div>
+          </div>
+        </div>
+        <button class="rc2-fav ${isFav ? 'active' : ''}" onclick="toggleRouteCardFav(${r.id}, this)">
+          ${isFav ? '❤️' : '🤍'}
+        </button>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="rc2-stats">
+        <div class="rc2-stat">
+          <span class="rc2-stat-icon">📏</span>
+          <span class="rc2-stat-val">${r.distance}</span>
+          <span class="rc2-stat-lbl">Dystans</span>
+        </div>
+        <div class="rc2-stat">
+          <span class="rc2-stat-icon">⏱️</span>
+          <span class="rc2-stat-val">${r.time}</span>
+          <span class="rc2-stat-lbl">Czas</span>
+        </div>
+        <div class="rc2-stat">
+          <span class="rc2-stat-icon">🔥</span>
+          <span class="rc2-stat-val">${r.calories}</span>
+          <span class="rc2-stat-lbl">kcal</span>
+        </div>
+        <div class="rc2-stat">
+          <span class="rc2-stat-icon" style="color:${diffColor}">${diffDots}</span>
+          <span class="rc2-stat-val" style="color:${diffColor}">${r.difficulty}</span>
+          <span class="rc2-stat-lbl">Poziom</span>
+        </div>
+      </div>
+
+      <!-- Difficulty bar -->
+      <div class="rc2-diff-bar">
+        <div class="rc2-diff-fill" style="width:${r.difficultyLevel * 33.3}%;background:${diffColor}"></div>
+      </div>
+
+      <!-- Tags -->
+      <div class="rc2-tags">${tagsHtml}</div>
+
+      <!-- Description (collapsed by default) -->
+      <div class="rc2-body" id="rbody-${r.id}" style="display:none">
+        <p class="rc2-desc">${r.desc}</p>
+
+        ${r.highlights ? `
+          <div class="rc2-section-title">✨ Atrakcje na trasie</div>
+          <ul class="rc2-highlights">${highlightsHtml}</ul>
+        ` : ''}
+
+        <div class="rc2-section-title">📍 Punkty trasy</div>
+        <div class="rc2-stops">${stopsHtml}</div>
+
+        <div class="rc2-meta-row">
+          <span>🌍 ${r.terrain}</span>
+          <span>🕐 Najlepiej: ${r.bestTime}</span>
+        </div>
+
+        <!-- Calorie calculator -->
+        <div class="rc2-calc">
+          <div class="rc2-calc-title">🔥 Kalkulator kalorii</div>
+          <div class="rc2-calc-row">
+            <label>Waga (kg):</label>
+            <input type="number" class="rc2-weight-input" id="weight-${r.id}" value="70" min="30" max="200" />
+            <button class="rc2-calc-btn" onclick="calcRouteCalories(${r.id}, ${r.distanceNum})">Oblicz</button>
+          </div>
+          <div class="rc2-calc-result" id="calc-result-${r.id}"></div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="rc2-actions">
+          <button class="rc2-btn primary" onclick="showRouteOnMap(${r.id})">
+            🗺️ Pokaż na mapie
+          </button>
+          <button class="rc2-btn timer ${routeState.timerRouteId === r.id ? 'active' : ''}" id="timer-btn-${r.id}" onclick="toggleRouteTimer(${r.id})">
+            ${routeState.timerRouteId === r.id ? '⏹ Stop' : '▶ Start trasy'}
+          </button>
+          <button class="rc2-btn share" onclick="shareRoute(${r.id})">
+            🔗 Udostępnij
+          </button>
+        </div>
+
+        <!-- Timer display -->
+        <div class="rc2-timer hidden" id="timer-display-${r.id}">
+          <span class="timer-icon">⏱️</span>
+          <span class="timer-time" id="timer-time-${r.id}">00:00</span>
+          <span class="timer-label">czas trasy</span>
+        </div>
+      </div>
+
+      <!-- Toggle button -->
+      <button class="rc2-toggle" onclick="toggleRouteCard(${r.id})" id="rtoggle-${r.id}">
+        <span>Szczegóły trasy</span>
+        <span class="rc2-arrow" id="rarrow-${r.id}">›</span>
+      </button>
+    </div>
+  `;
 }
 
-function toggleRoute(id) {
-  const body = document.getElementById(`route-body-${id}`);
-  const arrow = document.getElementById(`route-arrow-${id}`);
+function toggleRouteCard(id) {
+  const body = document.getElementById(`rbody-${id}`);
+  const arrow = document.getElementById(`rarrow-${id}`);
+  const toggle = document.getElementById(`rtoggle-${id}`);
   if (!body) return;
   const isOpen = body.style.display !== 'none';
   body.style.display = isOpen ? 'none' : 'block';
   if (arrow) arrow.textContent = isOpen ? '›' : '⌄';
+  if (toggle) toggle.querySelector('span').textContent = isOpen ? 'Szczegóły trasy' : 'Zwiń';
+}
+
+function toggleRouteCardFav(id, btn) {
+  const isFav = toggleRouteFav(id);
+  btn.textContent = isFav ? '❤️' : '🤍';
+  btn.classList.toggle('active', isFav);
+  showToast(isFav ? '❤️ Trasa dodana do ulubionych' : '🤍 Usunięto z ulubionych');
+  if (routeState.filter === 'fav') renderRouteCards();
+}
+
+function calcRouteCalories(routeId, distanceKm) {
+  const input = document.getElementById(`weight-${routeId}`);
+  const result = document.getElementById(`calc-result-${routeId}`);
+  if (!input || !result) return;
+  const weight = parseFloat(input.value) || 70;
+  const route = APP_DATA.routes.find(r => r.id === routeId);
+  const MET = { walk: 3.5, bike: 6.0, run: 9.0 }[route?.type] || 3.5;
+  const timeH = (route?.timeMin || 20) / 60;
+  const kcal = Math.round(MET * weight * timeH);
+  result.innerHTML = `<span class="calc-kcal">🔥 ${kcal} kcal</span> <span class="calc-note">dla ${weight}kg · ${route?.time}</span>`;
+}
+
+// ===== ROUTE TIMER =====
+function toggleRouteTimer(routeId) {
+  const btn = document.getElementById(`timer-btn-${routeId}`);
+  const display = document.getElementById(`timer-display-${routeId}`);
+  const timeEl = document.getElementById(`timer-time-${routeId}`);
+
+  if (routeState.timerRouteId === routeId) {
+    // Stop timer
+    clearInterval(routeState.activeTimer);
+    routeState.activeTimer = null;
+    routeState.timerRouteId = null;
+    if (btn) { btn.textContent = '▶ Start trasy'; btn.classList.remove('active'); }
+    if (display) display.classList.add('hidden');
+    const elapsed = Math.round((Date.now() - routeState.timerStart) / 1000);
+    const m = Math.floor(elapsed / 60), s = elapsed % 60;
+    showToast(`✅ Trasa ukończona! Czas: ${m}:${String(s).padStart(2,'0')}`);
+  } else {
+    // Stop any existing timer
+    if (routeState.activeTimer) {
+      clearInterval(routeState.activeTimer);
+      const oldBtn = document.getElementById(`timer-btn-${routeState.timerRouteId}`);
+      const oldDisp = document.getElementById(`timer-display-${routeState.timerRouteId}`);
+      if (oldBtn) { oldBtn.textContent = '▶ Start trasy'; oldBtn.classList.remove('active'); }
+      if (oldDisp) oldDisp.classList.add('hidden');
+    }
+    // Start new timer
+    routeState.timerRouteId = routeId;
+    routeState.timerStart = Date.now();
+    if (btn) { btn.textContent = '⏹ Stop'; btn.classList.add('active'); }
+    if (display) display.classList.remove('hidden');
+    routeState.activeTimer = setInterval(() => {
+      const elapsed = Math.round((Date.now() - routeState.timerStart) / 1000);
+      const m = Math.floor(elapsed / 60), s = elapsed % 60;
+      if (timeEl) timeEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }, 1000);
+    showToast('▶ Timer trasy uruchomiony!');
+    showRouteOnMap(routeId);
+  }
+}
+
+function shareRoute(id) {
+  const route = APP_DATA.routes.find(r => r.id === id);
+  if (!route) return;
+  const text = `${route.emoji} ${route.name} — ${route.distance}, ${route.time}. Sprawdź w przewodniku Łucznicza & Tarczowa!`;
+  const url = window.location.href.split('#')[0] + '#trasa-' + id;
+  if (navigator.share) {
+    navigator.share({ title: route.name, text, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => showToast('🔗 Link skopiowany!')).catch(() => showToast('🔗 ' + url));
+  }
 }
 
 function showRouteOnMap(id) {
@@ -825,16 +1071,16 @@ function showRouteOnMap(id) {
     // Highlight selected route, dim others
     state.routePolylines.forEach(polyline => {
       if (polyline.routeId === id) {
-        polyline.setStyle({ weight: 6, opacity: 1, dashArray: null });
+        polyline.setStyle({ weight: 7, opacity: 1, dashArray: null, color: route.color });
       } else {
-        polyline.setStyle({ weight: 3, opacity: 0.3, dashArray: '8, 4' });
+        polyline.setStyle({ weight: 3, opacity: 0.25, dashArray: '8, 4' });
       }
     });
 
     // Fit bounds to route
     const latLngs = route.coords.map(c => [c[1], c[0]]);
-    state.map.fitBounds(L.latLngBounds(latLngs), { padding: [50, 50], animate: true });
-    showToast(`🗺️ Trasa: ${route.name}`);
+    state.map.fitBounds(L.latLngBounds(latLngs), { padding: [60, 60], animate: true });
+    showToast(`${route.emoji} ${route.name} · ${route.distance}`);
   }, 200);
 }
 

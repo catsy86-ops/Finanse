@@ -38,7 +38,35 @@ const PLACES_EXTRA = {
   25: { price: 0, featured: false, popular: true,  hoursWeek: { mon:'0-24',tue:'0-24',wed:'0-24',thu:'0-24',fri:'0-24',sat:'0-24',sun:'0-24' }, gradient:'linear-gradient(135deg,#ff6b6b,#ee5a52)', reviews:[{name:'Marek K.',rating:4,text:'Dobre boisko, gramy tu regularnie.',date:'3 dni temu'}] },
   26: { price: 0, featured: false, popular: true,  hoursWeek: { mon:'0-24',tue:'0-24',wed:'0-24',thu:'0-24',fri:'0-24',sat:'0-24',sun:'0-24' }, gradient:'linear-gradient(135deg,#ff6b6b,#ee5a52)', reviews:[{name:'Bartek F.',rating:5,text:'Codziennie tu ćwiczę. Za darmo!',date:'1 dzień temu'}] },
   // Szkoła społeczna
-  27: { price: 1, featured: false, popular: false, hoursWeek: { mon:'7-17',tue:'7-17',wed:'7-17',thu:'7-17',fri:'7-17',sat:'zamkn',sun:'zamkn' }, gradient:'linear-gradient(135deg,#fd79a8,#e84393)', reviews:[{name:'Rodzic',rating:5,text:'Świetna szkoła, polecam.',date:'1 tydz. temu'}] }
+  27: { price: 1, featured: false, popular: false, hoursWeek: { mon:'7-17',tue:'7-17',wed:'7-17',thu:'7-17',fri:'7-17',sat:'zamkn',sun:'zamkn' }, gradient:'linear-gradient(135deg,#fd79a8,#e84393)', reviews:[{name:'Rodzic',rating:5,text:'Świetna szkoła, polecam.',date:'1 tydz. temu'}] },
+  // Biedronki
+  28: { price: 1, featured: false, popular: true,  hoursWeek: { mon:'6-23.5',tue:'6-23.5',wed:'6-23.5',thu:'6-23.5',fri:'6-23.5',sat:'6-23.5',sun:'zamkn' }, gradient:'linear-gradient(135deg,#ff6b6b,#ee5a52)', reviews:[{name:'Kasia M.',rating:4,text:'Duży wybór, długie godziny.',date:'2 dni temu'}] },
+  29: { price: 1, featured: false, popular: true,  hoursWeek: { mon:'6-22',tue:'6-22',wed:'6-22',thu:'6-22',fri:'6-22',sat:'6-22',sun:'zamkn' }, gradient:'linear-gradient(135deg,#ff6b6b,#ee5a52)', reviews:[{name:'Piotr K.',rating:3,text:'Standardowa Biedronka.',date:'3 dni temu'}] },
+  30: { price: 1, featured: true,  popular: true,  hoursWeek: { mon:'6-23.5',tue:'6-23.5',wed:'6-23.5',thu:'6-23.5',fri:'6-23.5',sat:'6-23.5',sun:'zamkn' }, gradient:'linear-gradient(135deg,#ff6b6b,#ee5a52)', reviews:[{name:'Ola K.',rating:4,text:'Przy centrum handlowym, wygodna.',date:'1 dzień temu'}] },
+  // Lidl
+  31: { price: 1, featured: false, popular: true,  hoursWeek: { mon:'7-22',tue:'7-22',wed:'7-22',thu:'7-22',fri:'7-22',sat:'7-22',sun:'zamkn' }, gradient:'linear-gradient(135deg,#ffd93d,#f0c419)', reviews:[{name:'Bartek F.',rating:4,text:'Dobry Lidl, świeże pieczywo.',date:'2 dni temu'}] },
+  32: { price: 1, featured: false, popular: true,  hoursWeek: { mon:'7-21',tue:'7-21',wed:'7-21',thu:'7-21',fri:'7-21',sat:'7-21',sun:'9-18' }, gradient:'linear-gradient(135deg,#ffd93d,#f0c419)', reviews:[{name:'Ewa T.',rating:5,text:'Czynny w niedzielę — super!',date:'1 dzień temu'}] },
+  33: { price: 1, featured: false, popular: false, hoursWeek: { mon:'6-22',tue:'6-22',wed:'6-22',thu:'6-22',fri:'6-22',sat:'6-22',sun:'8-20' }, gradient:'linear-gradient(135deg,#ffd93d,#f0c419)', reviews:[{name:'Jan S.',rating:4,text:'Duży parking, wygodny.',date:'4 dni temu'}] },
+  // Żabki
+  34: { price: 1, featured: false, popular: false, hoursWeek: { mon:'6-23',tue:'6-23',wed:'6-23',thu:'6-23',fri:'6-23',sat:'6-23',sun:'9-21' }, gradient:'linear-gradient(135deg,#43e97b,#38d16a)', reviews:[] },
+  35: { price: 1, featured: false, popular: false, hoursWeek: { mon:'6-23',tue:'6-23',wed:'6-23',thu:'6-23',fri:'6-23',sat:'6-23',sun:'6-23' }, gradient:'linear-gradient(135deg,#43e97b,#38d16a)', reviews:[] },
+  36: { price: 1, featured: false, popular: true,  hoursWeek: { mon:'6-23',tue:'6-23',wed:'6-23',thu:'6-23',fri:'6-23',sat:'6-23',sun:'9-22' }, gradient:'linear-gradient(135deg,#43e97b,#38d16a)', reviews:[{name:'Natalia C.',rating:4,text:'Wygodna lokalizacja na Łuczniczej.',date:'3 dni temu'}] },
+  37: { price: 1, featured: false, popular: false, hoursWeek: { mon:'6-23',tue:'6-23',wed:'6-23',thu:'6-23',fri:'6-23',sat:'6-23',sun:'6-23' }, gradient:'linear-gradient(135deg,#43e97b,#38d16a)', reviews:[] },
+  // McDonald's
+  38: { price: 2, featured: true,  popular: true,  hoursWeek: { mon:'7-24',tue:'7-24',wed:'7-24',thu:'7-24',fri:'7-24',sat:'7-24',sun:'7-24' }, gradient:'linear-gradient(135deg,#ffd93d,#f0c419)', reviews:[{name:'Daniel W.',rating:4,text:'Klasyczny McD, zawsze OK.',date:'1 dzień temu'},{name:'Ewa T.',rating:3,text:'Kolejki w godzinach szczytu.',date:'3 dni temu'}] },
+  // Dentysta
+  39: { price: 2, featured: false, popular: false, hoursWeek: { mon:'9-19',tue:'9-19',wed:'9-19',thu:'9-19',fri:'9-19',sat:'9-19',sun:'zamkn' }, gradient:'linear-gradient(135deg,#a29bfe,#8c7ae6)', reviews:[{name:'Halina S.',rating:5,text:'Świetny dentysta, polecam!',date:'1 tydz. temu'}] },
+  // Kwiaciarnia
+  40: { price: 2, featured: false, popular: true,  hoursWeek: { mon:'9-19',tue:'9-19',wed:'9-19',thu:'9-19',fri:'9-19',sat:'9-18',sun:'10-15' }, gradient:'linear-gradient(135deg,#fd79a8,#e84393)', reviews:[{name:'Mama Zuzi',rating:5,text:'Piękne bukiety, miła obsługa!',date:'2 dni temu'}] },
+  // Cukiernie
+  41: { price: 1, featured: true,  popular: true,  hoursWeek: { mon:'zamkn',tue:'9-17.5',wed:'9-17.5',thu:'9-17.5',fri:'9-17.5',sat:'9-16',sun:'9-15' }, gradient:'linear-gradient(135deg,#ffd93d,#f0c419)', reviews:[{name:'Zofia B.',rating:5,text:'Najlepsze torty w okolicy!',date:'1 dzień temu'},{name:'Krzysztof D.',rating:5,text:'Domowe smaki, polecam.',date:'3 dni temu'}] },
+  42: { price: 2, featured: true,  popular: true,  hoursWeek: { mon:'zamkn',tue:'9.5-18',wed:'9.5-18',thu:'9.5-18',fri:'9.5-18',sat:'9.5-15',sun:'10-14' }, gradient:'linear-gradient(135deg,#ffd93d,#f0c419)', reviews:[{name:'Ania W.',rating:5,text:'Cukiernia Malek to legenda Niebuszewo!',date:'2 dni temu'},{name:'Piotr K.',rating:5,text:'Praliny wyśmienite.',date:'4 dni temu'}] },
+  // Biblioteka
+  43: { price: 0, featured: false, popular: true,  hoursWeek: { mon:'8-20',tue:'8-20',wed:'8-20',thu:'8-20',fri:'8-20',sat:'zamkn',sun:'zamkn' }, gradient:'linear-gradient(135deg,#fd79a8,#e84393)', reviews:[{name:'Stanisław J.',rating:5,text:'Świetna biblioteka, dużo nowości.',date:'1 tydz. temu'}] },
+  // Apteka Thugutta
+  44: { price: 1, featured: false, popular: false, hoursWeek: { mon:'8-20',tue:'8-20',wed:'8-20',thu:'8-20',fri:'8-20',sat:'9-15',sun:'zamkn' }, gradient:'linear-gradient(135deg,#a29bfe,#8c7ae6)', reviews:[] },
+  // Żabka Rapackiego
+  45: { price: 1, featured: false, popular: false, hoursWeek: { mon:'6-23',tue:'6-23',wed:'6-23',thu:'6-23',fri:'6-23',sat:'6-23',sun:'6-23' }, gradient:'linear-gradient(135deg,#43e97b,#38d16a)', reviews:[] }
 };
 
 function enrichPlaces() {

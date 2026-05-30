@@ -341,6 +341,240 @@ const APP_DATA = {
       coords: [14.56735, 53.44945],
       rating: 4.5,
       tags: ['szkoła', 'społeczna', 'niepubliczna', 'edukacja']
+    },
+
+    // ===== SUPERMARKETY / SKLEPY SIECIOWE =====
+    {
+      id: 28, cat: 'shop',
+      name: 'Biedronka',
+      addr: 'ul. Rostocka 1, Szczecin',
+      emoji: '🛒',
+      desc: 'Sklep Biedronka przy ul. Rostockiej. Szeroki asortyment produktów spożywczych i przemysłowych w niskich cenach.',
+      hours: 'Pon–Sob 6:00–23:30',
+      phone: null, website: 'biedronka.pl',
+      coords: [14.55496, 53.46105],
+      rating: 4.0,
+      tags: ['biedronka', 'supermarket', 'tanie zakupy', 'sieciowy']
+    },
+    {
+      id: 29, cat: 'shop',
+      name: 'Biedronka',
+      addr: 'ul. Bpa Bandurskiego 90, Szczecin',
+      emoji: '🛒',
+      desc: 'Sklep Biedronka przy ul. Bandurskiego. Produkty spożywcze, chemia gospodarcza, artykuły codziennego użytku.',
+      hours: 'Pon–Sob 6:00–22:00',
+      phone: null, website: 'biedronka.pl',
+      coords: [14.55982, 53.45522],
+      rating: 3.9,
+      tags: ['biedronka', 'supermarket', 'tanie zakupy']
+    },
+    {
+      id: 30, cat: 'shop',
+      name: 'Biedronka',
+      addr: 'ul. Przyjaciół Żołnierza 128a, Szczecin',
+      emoji: '🛒',
+      desc: 'Biedronka przy centrum handlowym Przyjaciół Żołnierza. Duży wybór produktów, długie godziny otwarcia.',
+      hours: 'Pon–Sob 6:00–23:30',
+      phone: null, website: 'biedronka.pl',
+      coords: [14.55212, 53.45475],
+      rating: 4.1,
+      tags: ['biedronka', 'supermarket', 'centrum handlowe']
+    },
+    {
+      id: 31, cat: 'shop',
+      name: 'Lidl',
+      addr: 'ul. Bpa Bandurskiego 97, Szczecin',
+      emoji: '🛒',
+      desc: 'Sklep Lidl przy ul. Bandurskiego. Produkty spożywcze, świeże pieczywo, artykuły przemysłowe i tygodniowe promocje.',
+      hours: 'Pon–Sob 7:00–22:00',
+      phone: null, website: 'lidl.pl',
+      coords: [14.56176, 53.45465],
+      rating: 4.2,
+      tags: ['lidl', 'supermarket', 'promocje', 'pieczywo']
+    },
+    {
+      id: 32, cat: 'shop',
+      name: 'Lidl',
+      addr: 'ul. Z. Krasińskiego 82, Szczecin',
+      emoji: '🛒',
+      desc: 'Sklep Lidl przy ul. Krasińskiego. Czynny również w niedzielę. Świeże produkty, własna piekarnia.',
+      hours: 'Pon–Sob 7:00–21:00, Ndz 9:00–18:00',
+      phone: null, website: 'lidl.pl',
+      coords: [14.54326, 53.45014],
+      rating: 4.3,
+      tags: ['lidl', 'supermarket', 'niedziela', 'piekarnia']
+    },
+    {
+      id: 33, cat: 'shop',
+      name: 'Lidl',
+      addr: 'ul. Z. Krasińskiego 50, Szczecin',
+      emoji: '🛒',
+      desc: 'Drugi sklep Lidl przy ul. Krasińskiego. Duży parking, szeroki asortyment, czynny w weekendy.',
+      hours: 'Pon–Sob 6:00–22:00, Ndz 8:00–20:00',
+      phone: null, website: 'lidl.pl',
+      coords: [14.54565, 53.45531],
+      rating: 4.1,
+      tags: ['lidl', 'supermarket', 'parking', 'weekend']
+    },
+
+    // ===== ŻABKI =====
+    {
+      id: 34, cat: 'shop',
+      name: 'Żabka',
+      addr: 'ul. Bpa Bandurskiego 98, Szczecin',
+      emoji: '🐸',
+      desc: 'Sklep Żabka przy ul. Bandurskiego. Produkty spożywcze, napoje, przekąski. Czynna do 23:00.',
+      hours: 'Pon–Sob 6:00–23:00, Ndz 9:00–21:00',
+      phone: null, website: 'zabka.pl',
+      coords: [14.56345, 53.45347],
+      rating: 3.8,
+      tags: ['żabka', 'convenience', 'szybkie zakupy', 'wieczór']
+    },
+    {
+      id: 35, cat: 'shop',
+      name: 'Żabka',
+      addr: 'ul. Przyjaciół Żołnierza, Szczecin',
+      emoji: '🐸',
+      desc: 'Żabka przy ul. Przyjaciół Żołnierza. Czynna codziennie, idealna na szybkie zakupy.',
+      hours: 'Codziennie 6:00–23:00',
+      phone: null, website: 'zabka.pl',
+      coords: [14.55444, 53.45387],
+      rating: 3.7,
+      tags: ['żabka', 'convenience', 'codziennie']
+    },
+    {
+      id: 36, cat: 'shop',
+      name: 'Żabka',
+      addr: 'ul. Łucznicza, Szczecin',
+      emoji: '🐸',
+      desc: 'Żabka na ul. Łuczniczej. Blisko centrum dzielnicy, szybkie zakupy, kawa na wynos.',
+      hours: 'Pon–Sob 6:00–23:00, Ndz 9:00–22:00',
+      phone: null, website: 'zabka.pl',
+      coords: [14.54909, 53.45305],
+      rating: 3.9,
+      tags: ['żabka', 'convenience', 'kawa', 'Łucznicza']
+    },
+    {
+      id: 37, cat: 'shop',
+      name: 'Żabka',
+      addr: 'ul. Sosnowa 20, Szczecin',
+      emoji: '🐸',
+      desc: 'Żabka przy ul. Sosnowej. Wygodna lokalizacja dla mieszkańców okolicznych bloków.',
+      hours: '6:00–23:00',
+      phone: null, website: 'zabka.pl',
+      coords: [14.54612, 53.45190],
+      rating: 3.8,
+      tags: ['żabka', 'convenience', 'osiedle']
+    },
+
+    // ===== RESTAURACJE / FAST FOOD =====
+    {
+      id: 38, cat: 'food',
+      name: "McDonald's",
+      addr: 'ul. Przyjaciół Żołnierza 6, Szczecin',
+      emoji: '🍔',
+      desc: "Restauracja McDonald's na Niebuszewie. Burgery, frytki, kawy McCafé. Drive-thru i sala restauracyjna.",
+      hours: 'Codziennie 7:00–24:00',
+      phone: null, website: 'mcdonalds.pl',
+      coords: [14.56135, 53.45382],
+      rating: 3.9,
+      tags: ['mcdonalds', 'fast food', 'burgery', 'drive-thru']
+    },
+
+    // ===== USŁUGI =====
+    {
+      id: 39, cat: 'service',
+      name: 'Gabinet Stomatologiczny',
+      addr: 'ul. Łucznicza 76A, Szczecin',
+      emoji: '🦷',
+      desc: 'Gabinet stomatologiczny na ul. Łuczniczej. Leczenie, profilaktyka, wybielanie zębów. Rejestracja telefoniczna.',
+      hours: 'Pon–Sob 9:00–19:00',
+      phone: null, website: null,
+      coords: [14.54984, 53.45311],
+      rating: 4.4,
+      tags: ['dentysta', 'stomatolog', 'zęby', 'Łucznicza']
+    },
+
+    // ===== SKLEPY SPECJALISTYCZNE =====
+    {
+      id: 40, cat: 'shop',
+      name: 'Kwiaciarnia',
+      addr: 'ul. Jarogniewa, Szczecin',
+      emoji: '🌸',
+      desc: 'Kwiaciarnia na Niebuszewie. Świeże kwiaty, bukiety, kompozycje na każdą okazję. Czynna w niedzielę.',
+      hours: 'Pon–Pt 9:00–19:00, Sob 9:00–18:00, Ndz 10:00–15:00',
+      phone: null, website: null,
+      coords: [14.55831, 53.45287],
+      rating: 4.6,
+      tags: ['kwiaciarnia', 'kwiaty', 'bukiety', 'prezenty']
+    },
+
+    // ===== CUKIERNIE =====
+    {
+      id: 41, cat: 'food',
+      name: 'Cukiernia Domowa',
+      addr: 'ul. Księżnej Zofii, Szczecin',
+      emoji: '🍰',
+      desc: 'Cukiernia Domowa — torty, ciasta, wyroby cukiernicze na zamówienie. Domowe smaki, tradycyjne receptury.',
+      hours: 'Wt–Pt 9:00–17:30, Sob 9:00–16:00, Ndz 9:00–15:00',
+      phone: null, website: null,
+      coords: [14.55866, 53.45198],
+      rating: 4.7,
+      tags: ['cukiernia', 'torty', 'ciasta', 'domowe']
+    },
+    {
+      id: 42, cat: 'food',
+      name: 'Cukiernia Malek',
+      addr: 'ul. Przyjaciół Żołnierza, Szczecin',
+      emoji: '🍰',
+      desc: 'Cukiernia Malek — tradycyjna cukiernia z długą historią. Pyszne torty, praliny i wyroby czekoladowe.',
+      hours: 'Wt–Pt 9:30–18:00, Sob 9:30–15:00, Ndz 10:00–14:00',
+      phone: null, website: null,
+      coords: [14.56287, 53.45356],
+      rating: 4.8,
+      tags: ['cukiernia', 'torty', 'czekolada', 'tradycja']
+    },
+
+    // ===== BIBLIOTEKA =====
+    {
+      id: 43, cat: 'edu',
+      name: 'Biblioteka Publiczna — Filia nr 13',
+      addr: 'ul. Księżnej Zofii, Szczecin',
+      emoji: '📚',
+      desc: 'Miejska Biblioteka Publiczna w Szczecinie — Filia nr 13 na Niebuszewie. Wypożyczalnia książek, czytelnia, dostęp do internetu.',
+      hours: 'Pon–Pt 8:00–20:00',
+      phone: null, website: 'ksiaznica.szczecin.pl',
+      coords: [14.55860, 53.45174],
+      rating: 4.5,
+      tags: ['biblioteka', 'książki', 'czytelnia', 'internet', 'bezpłatne']
+    },
+
+    // ===== APTEKA DBAM O ZDROWIE (Thugutta) =====
+    {
+      id: 44, cat: 'service',
+      name: 'Apteka Dbam o Zdrowie',
+      addr: 'ul. S. Thugutta 2a, Szczecin',
+      emoji: '💊',
+      desc: 'Apteka Dbam o Zdrowie przy ul. Thugutta. Leki, suplementy, kosmetyki. Czynna w soboty.',
+      hours: 'Pon–Pt 8:00–20:00, Sob 9:00–15:00',
+      phone: null, website: 'dbamozdrowie.pl',
+      coords: [14.55630, 53.46098],
+      rating: 4.0,
+      tags: ['apteka', 'leki', 'zdrowie', 'Thugutta']
+    },
+
+    // ===== ŻABKA RAPACKIEGO =====
+    {
+      id: 45, cat: 'shop',
+      name: 'Żabka',
+      addr: 'ul. M. Rapackiego, Szczecin',
+      emoji: '🐸',
+      desc: 'Żabka przy ul. Rapackiego. Czynna codziennie od 6:00. Produkty spożywcze, napoje, przekąski.',
+      hours: 'Codziennie 6:00–23:00',
+      phone: null, website: 'zabka.pl',
+      coords: [14.54785, 53.45000],
+      rating: 3.8,
+      tags: ['żabka', 'convenience', 'Rapackiego']
     }
   ],
 

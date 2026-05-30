@@ -7,11 +7,28 @@
   <meta name="description" content="Interaktywny przewodnik po ulicy Łuczniczej i Tarczowej w Szczecinie z mapą 3D" />
   <title>Przewodnik — Łucznicza & Tarczowa, Szczecin</title>
   <link rel="manifest" href="manifest.json" />
+  <!-- Inline emoji favicon (prevents favicon.ico 404) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏹</text></svg>" />
 
   <!-- Mapbox removed — using Leaflet + OpenStreetMap instead -->
 
-  <!-- Google Maps API (Street View + Panoramic) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3aLJJFzlRXfWz9K9wQ8XzLt5rVqpQxE8&libraries=places,geocoding"></script>
+  <!-- Google Maps API (Street View) — optional, loaded async. Fails gracefully if key invalid. -->
+  <script>
+    // Called by Google Maps if the API key is invalid/unauthorized
+    window.gm_authFailure = function () {
+      window.GOOGLE_MAPS_FAILED = true;
+      console.warn('⚠️ Google Maps key invalid — Street View disabled, Leaflet map still works.');
+      var btn = document.getElementById('btnStreetView');
+      if (btn) { btn.style.display = 'none'; }
+    };
+    window.initGoogleMapsCallback = function () {
+      if (typeof initGoogleMaps === 'function') {
+        try { initGoogleMaps(); } catch (e) { console.warn('Google Maps init skipped:', e); }
+      }
+    };
+  </script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3aLJJFzlRXfWz9K9wQ8XzLt5rVqpQxE8&libraries=places,geocoding&loading=async&callback=initGoogleMapsCallback"></script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,15 +39,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
-  <!-- Suppress Firefox WebGL deprecation warnings -->
+  <!-- Suppress noisy third-party deprecation warnings (Firefox/Google Maps) -->
   <script>
     const originalWarn = console.warn;
     console.warn = function(...args) {
       const msg = args[0]?.toString() || '';
-      if (msg.includes('WEBGL_debug_renderer_info') || 
+      if (msg.includes('WEBGL_debug_renderer_info') ||
           msg.includes('texImage: Alpha-premult') ||
-          msg.includes('InstallTrigger')) {
-        return; // suppress these warnings
+          msg.includes('InstallTrigger') ||
+          msg.includes('loading=async') ||
+          msg.includes('czujnika orientacji') ||
+          msg.includes('orientation sensor') ||
+          msg.includes('Układ został wymuszony')) {
+        return; // suppress these noisy warnings
       }
       originalWarn.apply(console, args);
     };

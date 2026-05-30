@@ -332,11 +332,15 @@ function initMapControls() {
   const btnStreetView = document.getElementById('btnStreetView');
   if (btnStreetView) {
     btnStreetView.addEventListener('click', () => {
-      if (window.googleMapsAPI && window.googleMapsAPI.toggleStreetView) {
+      if (window.GOOGLE_MAPS_FAILED) {
+        showToast('⚠️ Street View niedostępny (brak ważnego klucza Google Maps)');
+        return;
+      }
+      if (window.googleMapsAPI && window.googleMapsAPI.toggleStreetView && GOOGLE_MAPS && GOOGLE_MAPS.panorama) {
         window.googleMapsAPI.toggleStreetView();
         showToast('📸 Google Street View');
       } else {
-        showToast('⚠️ Street View nie dostępny');
+        showToast('⚠️ Street View jeszcze się ładuje lub jest niedostępny');
       }
     });
   }

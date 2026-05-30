@@ -383,11 +383,20 @@ window.googleMapsAPI = {
   getStreetViewPanorama: () => GOOGLE_MAPS.panorama
 };
 
-// Auto-initialize when DOM is ready (if Google Maps API is loaded)
+// Auto-initialize when DOM is ready (only if API loaded AND callback didn't already run)
 document.addEventListener('DOMContentLoaded', () => {
-  if (typeof google !== 'undefined' && google.maps) {
-    // Slight delay to ensure other scripts have loaded
-    setTimeout(initGoogleMaps, 100);
-    setTimeout(setupPanoramicControls, 200);
-  }
+  if (window.GOOGLE_MAPS_FAILED) return;
+  // The async script uses callback=initGoogleMapsCallback. This is a fallback
+  // in case the API was already present (cached) without firing the callback.
+  setTimeout(() => {
+    if (window.GOOGLE_MAPS_FAILED) return;
+    if (typeof google !== 'undefined' && google.maps && !GOOGLE_MAPS.panorama) {
+      try {
+        initGoogleMaps();
+        setupPanoramicControls();
+      } catch (e) {
+        console.warn('Google Maps init skipped:', e);
+      }
+    }
+  }, 600);
 });

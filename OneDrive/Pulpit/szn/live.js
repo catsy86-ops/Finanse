@@ -404,6 +404,16 @@ const STOPS = [
 ];
 
 async function generateTransportDepartures() {
+  // On localhost the Vercel serverless function isn't running — skip the API
+  // call to avoid a 404 and go straight to realistic simulated data.
+  const isLocal = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+  if (isLocal) {
+    const departures = generateSimulatedTransportDepartures();
+    renderTransportPanel(departures);
+    renderTransportFull(departures, false);
+    return;
+  }
+
   try {
     // Try to fetch real data from our Vercel proxy API
     const response = await fetch('/api/zditm-departures?stops=Łucznicza,Tarczowa', {
